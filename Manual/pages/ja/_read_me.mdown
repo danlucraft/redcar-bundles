@@ -1,0 +1,18 @@
+# Japanese Translation of TextMate Manual
+
+Please report any issues at 
+<http://samuraicoder.lighthouseapp.com/projects/14456-textmate-manual-japanese-translation-project/overview>
+
+or email me directly.
+
+Looking for some participants.Contact <gnxnnxv@fnzhenvpbqre.arg> (ROT13).
+
+## Issues
+
+* **Update** It seems the issue was caused by font cache. Please remove the font cache if you have any similar problems. 
+* TextMate doesn't support CJK at this moment. Users including those who use [Fake CJK Support](http://macromates.com/blog/archives/2006/11/09/faking-cjk-support/) are encouraged not to open other files in this directory with TextMate. TextMate or the entire system may hang. You may be able to open, but converting the Markdown to HTML may also be a cause of this hang. From my personal experience, handling lots of CJK text prones to this issue. (Any report on this issue is encouraged.)
+
+## Contributer(s)
+
+* Takaaki Kato aka. samuraicoder
+

@@ -1,0 +1,96 @@
+# 他のアプリケーションからTextMateを使用する {calling_textmate_from_other_applications}
+
+## シェル／ターミナル {shell_terminal}
+
+Mac OS Xには[`open`](http://developer.apple.com/documentation/Darwin/Reference/ManPages/man1/open.1.html)が付属します。このシェルコマンドはTerminalからダブルクリックをシミュレートします。引数`-a`を使うことによって_Open With…_の動作をすることもできます。例えば、`open -a TextMate .`で現在のフォルダを（まっさらのプロジェクトを）TextMateで開きます。
+
+この標準的なコマンドにはいくつかの欠点があります: 一回に一つのファイルしか開くことができないこと、個別の行のドキュメントを開くことができないこと、ファイルが閉じられるまでシェルを"ストール"させておくことができないことなどです。Subversionのコミットメッセージのようなものを書く際にエディタを使う際に、ストールさせておくと役に立ちます。。
+
+こういうわけで、TextMateには`mate`というシェルコマンドが付属します。このコマンドは`open`コマンドにとってかわります。使い方は（ターミナルで）`mate -h`を実行してください。
+
+`mate`コマンドはTextMateアプリケーションバンドルの中にあります。なので、（"インストール"するよりも)、コマンドに対して、シンボリックリンクを作成することが推奨されます。そうすることで、もしコマンドが将来アップデートされても、アップデートされたコマンドを再インストールする必要がありません。
+
+シンボリックリンクを作成するには、メニューからHelp &#x2192; Terminal Usage… を選択するか、もしくは、次のようなコマンドをシェルで実行することでできます:
+
+    
+    ln -s /Applications/TextMate.app/Contents/Resources/mate ~/bin/mate
+
+これは、あなたがパスに`~/bin`を設定していて、なおかつTextMateが`/Applications`にインストールされていることを前提としてます。
+
+このリンクを作った後、TextMateを他のアプリケーションの外部エディタとして使うためのシェル変数を設定する必要があるでしょう。
+
+### 一般的な EDITOR 変数 {the_general_editor_variable}
+
+
+`EDITOR`変数は、`svn`(subversoin)や`CVS`のようなたくさんのシェルコマンドで使われます。TextMateを`EDITOR`変数のエディタとして使うには、次のようにセットしてください（bashユーザは`~/bash_profile`、zshユーザは`~/zshrc`のように）:
+    
+    export EDITOR='mate -w'
+
+TextMateがファイルを閉じるまで、コマンドを再会するのを待たせるために`-w`を加えました。
+
+`EDITOR`変数で引数をサポートしないコマンドがあります。それは、`crontab`です。（`crontab`は[launchd](http://developer.apple.com/documentation/Darwin/Reference/ManPages/man8/launchd.8.html)があるためあまり使われませんが。）もし使う必要があれば、`mate`に、`-w`を意味する`_wait`と追加して、シンボリックリンクを作成することができます。例えば:
+    
+    ln -s mate ~/bin/mate_wait   # run this once to create the link
+    export EDITOR='mate_wait'    # use in your ~/.bash_profile
+
+### Git エディタ {git_editor}
+
+Gitレポジトリにコミットすると、キャレットが最初の行にないことに気づくかもしれません。
+
+これは、Gitがコミットメッセージに使うテンプラリファイルを再利用して、TextMateが(拡張属性経由で)ファイル毎にキャレットを保存するからです。
+
+Gitエディタを`mate -wl1`に設定することで、この問題を回避できます。こうして、最後に位置していた場所ではなく、１行目にキャレットが位置していた状態でTextMateはファイルを開きます。
+
+このようにGitを設定するには、`GIT_EDITOR`変数を設定するかGitの`core.editor`の設定変数を指定してください。
+
+[Git]: http://git.or.cz/ "Git - Fast Version Control System"
+
+### TeX エディタ {tex_editor}
+
+TeXがファイルに関するエラーメッセージを表示する際、`e`を押すことで、ファイルを編集（し、エラーを訂正）することができます。
+
+TextMateがこのように使われるように設定するためには`TEXEDIT`編集を次のようにしてください:
+
+    export TEXEDIT='mate -w -l %d "%s"'
+
+### `less`での編集 {edit_from_less}
+
+`less`ページャーは`v`を押すことで、そのファイルを編集することができます。TextMateをlessで使うためには、`LESSEDIT`変数をする必要があります:
+
+    
+    export LESSEDIT='mate -l %lm %f'
+
+
+## URLスキーム (HTML) {url_scheme_html}
+
+`txmt`というURLスキームを使うことによって、例えば、HTMLドキュメント（アンカー）の中にあるハイパーリンク経由でTextMateでファイルを開くことができます。ローカルのファイルを参照できるので次のようなときに役に立ちます:
+
+ 1. [HTMLアウトプット][HTMLOutput]と一緒に[コマンド][Commands]を使って、現在のドキュメントエラーや警告を表示するしたり、プロジェクトの他のドキュメントを参照する。
+
+ 2. あなたが、同じような（テキスト）ファイルから、1セットのウェブページを生成しているときオリジナルのテキストファイルにリンクを張ることができます。なので、（ブラウザで）生成された結果を調べている時に、`txmt:`リンクを追っていくことでそれぞれのページのソースをすぐに編集できます。
+
+URLスキームは`txmt:`で現在は`open`というコマンドを使っています。このコマンドには３つまでの引数を使えます:
+
+ * `url` — （`url=file://~/.bash_profile`のような）開く（ファイル）URL。もし設定されてなければ、現在のドキュメントがターゲットになります。
+
+ * `line` — ファイルが開かれた後に、どのラインにキャレットが置かれるか（例えば、`line=11`）
+ 
+ * `column` — ファイルが開かれた後に、どのカラムにキャレットがくるか（例えば、`column=3`）
+
+`txmt:`のURLの完全な例として、([テストのためにこちらをクリックしてください](txmt://open/?url=file://~/.bash_profile&line=11&column=2)):
+
+    txmt://open/?url=file://~/.bash_profile&line=11&column=2
+
+## ODBエディタスイート {odb_editor_suite}
+
+TextMateはODBエディタスイートのサーバーサイドを実装しています。このことによって、そのプロトコルのクライアントサイドを実装しているプログラムの外部エディタとして使うことができます。
+
+しかしながら、どのテキストエディタがプロトコルを実装しているをりすとをハードコードしています。よって、もし、ODBエディタスイートをサポートしているアプリケーションの外部エディタのリストにTextMateがない場合は、そのアプリケーションの作者に、サポートされているエディタのリストにTextMateを加えるようにリクエストしないといけないかもしれません。
+
+[外部テキストエディタとして設定できるアプリケーション](http://macromates.com/wiki/Main/TextMateAwarePrograms)を追跡するwikiページあります。
+
+## Cocoaテキストフィールド {cocoa_text_fields}
+
+TextMateには（Mailで使われているのを含めて）TextMateをスタンダードCocoaテキストエディタコントロールからTextMateを呼び出すことができる、"Edit in TextMate"というインプットマネージャーが含まれます。これは、Safariのフォーム要素のように、ODBエディタスイートを実装しないプログラムで使うときに便利です。
+
+詳しい情報は、（ステータスバーのギアメニューからアクセスできる）TextMateバンドルにある_Install “Edit in TextMate”…_を選択してください。実際にインストールする前に必要なドキュメンテーションをすべて提供します。

@@ -1,0 +1,46 @@
+# ヘルプをえる {getting_help}
+
+## メーリングリスト {mailing_list}
+
+[TextMateのためのメーリングリスト](http://lists.macromates.com/mailman/listinfo/textmate)があります。[アーカイブ](http://lists.macromates.com/pipermail/textmate/)はパブリックで以下のフォームで検索できます。
+
+<form method="GET" action="http://www.google.com/search" accept-charset="utf-8">
+    <p>
+        <input type="hidden" name="num" value="20">
+        <input type="hidden" name="hl" value="en">
+        <input type="hidden" name="c2coff" value="1">
+        <input type="hidden" name="as_sitesearch" value="lists.macromates.com">
+        <input type="text" name="as_q" size="40" class="txt">
+        <input type="submit" name="btnG" value="Google Search">
+    </p>
+</form>
+
+## IRC チャンネル {irc_channel}
+
+ `##textmate` というIRCが [freenode.org](http://freenode.org/)上にあります。
+
+## 他のリソース {other_resources}
+
+### TextMate チートシート {textmate_cheat_sheet}
+
+David Powers が、印刷してあなたのコンピュータの隣においておくことができる[簡潔なチートシート](http://www.grayskies.net/textmate) ([ PDFへの直接リンク](http://www.grayskies.net/TMcheatsheet.pdf)) を作りました。これは、たくさんの一般的なアクションのキーの組み合わせのリストを示します。
+
+
+### TextMate Tutorials {textmate_tutorials}
+
+Soryu は [２つのセットアップと基本的な使用法を扱ったTextMateのチュートリアル](http://projects.serenity.de/textmate/tutorials/)書きました。
+
+
+### スクリーンキャスト {screencasts}
+
+[スクリーンキャスト RSS フィード](pcast://macromates.com/textmate/screencast.rss) をiTunesを通じて購読できます。
+
+Here is a list with direct links to a few of the screencasts in recommended viewing order:
+
+ * [Scope Based Customizations](http://macromates.com/screencast/scopes_and_comments.mov) (21:26)
+ * [Working With Numbers and Columns](http://macromates.com/screencast/math_and_column_selections.mov) (11:41)
+ * [Inserting HTML Tags](http://macromates.com/screencast/insert_html_tags.mov) (7:19)
+ * [Objective-C Part 1](http://macromates.com/screencast/objective-c_part_1.mov) (4:32)
+ * [objective-C Part 2](http://macromates.com/screencast/objective_c_part_2.mov) (10:39)
+
+短いようやくと全てのリストはオンラインの[スクリーンキャストのページ](http://macromates.com/screencasts)をご覧ください。

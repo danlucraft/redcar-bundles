@@ -1,0 +1,89 @@
+# Shell Commands　（シェルコマンド） {shell_commands}
+
+シェルはいろいろなプログラム（シェルコマンド）を統合するためのスクリプト言語で、例えば、ターミナルを起動して実行するコマンドを入力したときのようにインタラクティブに使われることも多いです。
+
+
+シェルスクリプト言語の紹介については、この[Appleによるシェルのチュートリアル][AppleShellTutorial]を見てください。
+
+[AppleShellTutorial]: http://developer.apple.com/documentation/OpenSource/Conceptual/ShellScripting/index.html
+
+## Executing Commands / Filtering Text　コマンドの実行／テキストのフィルタリング {executing_commands_filtering_text}
+
+TextMateではさまざまなコンテクストでシェルコマンドを実行できます。実用的な方法には次のようなものがあります:
+
+ 1. 現在のドキュメントで、現在の行をシェルコマンドとして実行するためには、何も選択せずに、&#x2303;Rを押してください、もしくは、 s選択範囲をシェルスクリプトとして実行するためには、１行以上を選択して&#x2303;Rを押してください。（shebangもサポートされています。）
+
+    ![Execute Line](execute_line.png)
+
+ 2. TextメニューからFilter Through Command… (&#x2325;&#x2318;R)を選択することによって、実行するシェルコマンドを入力し、なにがインプット(stdin)として与えられ、さらにコマンドのアウトプットをどうしたいかを決めるパネルが開きます。（たいてい選択されたテキストをインプットにセットしてアウトプットを使ってその選択されたテキストを置き換えたいでしょう。）
+ 
+    ![Filter Through Command](filter_through_command.png)
+
+ 3. バンドルエディタの[コマンド][Commands]。最初の二つの方法は主に、一回限りのコマンドです。しかし、バンドルエディタのコマンドは何度も使うものです。ここで紹介する方法は2番の方法と同じです。つまり、インプットとアウトプットをどうしたいかを指定でき、なおかつアウトプットを（例えば、現在の単語について調べるコマンドのために）ツールチップでアウトプットを表示させたり、（例えばプロジェクトをビルドして、結果を順に表示させるために）HTMLで表示させたりできます。また、コマンドが実行される前にドキュメントを保存するように指定したり、コマンドにショートカットやタブトリガーを割り当てることができます。
+
+    ![Command Editor](command_editor.png)
+
+
+## Search Path サーチパス {search_path}
+
+ターミナルでコマンドを実行すると、（絶対パスなしで設定されている）シェルは`PATH`変数の値を使って、コマンドを見つけます。例えば`ruby`は`/usr/bin/ruby`にあります。`svn`は（私のでは)`/opt/local/bin/svn`にあります。
+
+TextMateは通常は[Finderからの`PATH`の値を継承します。][1]しかし、それはほんのいくつかの場所を検索することしか指定されていないので、あまり役に立ちません。
+
+TextMateは代わりに、実際のシェルコマンドを実行する前に、(`$TM_SUPPORT_PATH/lib`にある`bash_init.sh`という名前の)カスタムスクリプトを実行します。このスクリプトは以下のコードを含みます:
+
+    if [ ! -f "$TM_BASH_INIT" ]; then
+
+       # First read system-wide profile
+       [ -f /etc/profile ] && . /etc/profile
+
+       # Then find the first local profile
+       if   [ -f ~/.bash_profile ]; then . ~/.bash_profile
+       elif [ -f ~/.bash_login   ]; then . ~/.bash_login
+       elif [ -f ~/.profile      ]; then . ~/.profile
+       fi
+
+    fi
+
+これが意味するところは、あなたが自分でカスタマイズされた`bash_init.sh`を作らない限り、TextMateは最初に`/etc/profile`をソースにして、その後、あなたのホームフォルダにある、初めのbashの初期化（イニシャライゼーション）ファイルをソースにします。
+
+もしあなたがいつもbashシェルを使わないなら、（`tcsh`や`zsh`のようなものでは）いつも使うパスを設定しなければいけないでしょう。例えば、`~/.bash_profile`ファイルを作成し、以下のような行を含む必要があります：
+
+
+    [ -f /etc/profile ] && . /etc/profile
+    [ -f ~/.bashrc ]    && . ~/.bashrc
+
+    export PATH="$HOME/bin:/opt/local/bin:$PATH"
+
+
+これは、パスに`~/bin`と`/opt/local/bin`を追加します。`~`の代わりに、`$HOME`を使うのを忘れないでください。なぜなら、二重引用符のなかで`~`は展開されませんが、`$HOME`は展開されるからです。
+
+**重要:** （コマンドの最初の行に`#!/usr/bin/ruby`や`#!/usr/bin/env ruby`のような）個別のインタープリタをコールするためのshebangを使うシェルコマンドはこの設定の手順を使いません。なので、追加されたパスを取得しません。[ログインしたときにFinderが読み込む環境変数][3]に対応したキー／値のペアをもっているプロパティーリストである[`~/.MacOSX/environment.plist`][2]で`PATH`を設定することによって引数をとることができます。
+
+よって、もし`/opt/local/bin`をパスに追加したいなら、`~/.MacOSX/environment.plist`というファイルを作って、次のものを追加してください:
+
+    { PATH = "/opt/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"; }
+
+このファイルを作成（または編集）した後には、その効果を得るためにあなたのアカウントにログインし直す必要があります。
+
+なお、このファイルには`$HOME`を使うことはできません。なので代わりに`$HOME/bin`には`/Users/allan/bin`のように書いてください。（`allan`をあなたのユーザ名に変えてください。）
+
+
+[1]: http://developer.apple.com/qa/qa2001/qa1255.html
+[2]: http://developer.apple.com/documentation/MacOSX/Conceptual/BPRuntimeConfig/Articles/EnvironmentVars.html#//apple_ref/doc/uid/20002093-113982
+[3]: http://developer.apple.com/qa/qa2001/qa1067.html
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

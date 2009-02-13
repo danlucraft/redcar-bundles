@@ -1,0 +1,107 @@
+# ナビゲーション / オーバービュー {navigation_overview}
+
+## ブックマーク {bookmarks}
+
+もしあなたがキャレットをそのドキュメントのどこか別の場所に動かす必要があって、また早く戻ってくる必要があれば、あなたは現在の行にブックマークを設定することができます。
+
+これは、（ブックマークのためにある列の）ガッターをくりっくするか、&#x2318;F2を押すことによってなされます。ブックマークは以下のように星印で示されます。
+
+![Bookmark](bookmark.png)
+
+あなたが、元の場所に戻りたいとき、F2を押してください。F2はあなたをドキュメントの次のブックマークの位置へ動かします。もし、複数のブックマークがある場合、あなたはF2を何回か押すことができます。&#x21E7;F2を押すと前のブックマークへ移動します。
+
+## テキストブロックを折りたたむ (フォールディング) {collapsing_text_blocks_foldings}
+
+`{` … `}`, `do` … `end`, `<tag>` … `</tag>`のように、もしあなたが、ブロックにスタートとエンドのマーカーを持っている言語を使用しているとき、TextMateはこのブロックを見つけて、上向きと下向きの矢印をスタートとエンドマーカーのガッターに表示します。
+
+この矢印が表示されているとき、上下の矢印の表示をマウスでクリックするか、もしくはF1キーを押すことによってブロックを一つの行にたたむことが可能です。これは、ガッターの矢印を右向きに変え、全てのブロックが行末におかれたellipsisのマーカーを置くことによってたたまれたことを示します。二つのconstructorのサブブロックがたたまれた場合の例は以下のようになります。
+
+![Folded Blocks](folded_blocks.png)
+
+テキストがたたまれた場合、F1を押すかもしくはガッターの矢印かellipsisのイメージを押すことによって広げることができます。また、マウスをellipsisイメージの上に置いてたたまれたブロックの中身を示すツールチップを出すことも可能です。後者の方法は、次の画像で示されます。
+
+![Folding Tool Tip](folding_tool_tip.png)
+
+_警告:折り畳む機能は両方がともにはっきりとしたインデントマーカーをもっていて、**かつ**スタートとストップマーカーが同じインデントレベルにあることを基礎としています。つまり折りたたみは純粋にインデントに頼っているため、スタートとストップマーカーがalignしていない場合は現在サポートしていません。_
+
+### 折りたたみのカスタマイズ {customizing_foldings}
+
+前述したように、折りたたみのシステムははっきりと決められたスタートとストップマーカーを使用します。TextMateはこのことを、あなたが`foldingStartMarker`と`foldingStopMarker`の正規表現を設定できる、[language grammar][LanguageGrammars]から知ります。
+
+![Folding Patterns](folding_patterns.png)
+
+<!-- Shown above are the HTML folding patterns, which are all relatively simple because they fold on a selected set of tag pairs, HTML comments, some Smarty tags and start/stop braces when either last on the line or used in embedded code tags like this: -->
+
+上に見えているのはHTMLの折りたたみのパターンです。これは、行のタグのペアやHTMLコメント、Smartyタグとスタート／ストップのブレース（大括弧）のセットをもとにして折り畳まれているので比較的シンプルです。<!-- TODO can't translate when either blah blah.. -->
+
+
+    <?php if(something) { // user is authenticated ?>
+
+       ...
+
+    <?php } // user is authenticated ?>
+
+
+行のスペース以外のキャラクターとして`{`から始まり、行の最初のスペースでないキャラクタとして`}`で終わるブロックを定義するには、次のようなパターンを使うことができます。
+
+
+    foldingStartMarker = '\{\s*$';
+    foldingStopMarker = '^\s*\}';
+
+
+## ファンクション（関数）ポップアップ {function_pop-up}
+
+
+ファンクション（関数）ポップアップをサポートする言語に関しては、ステータスバーの一番右のポップアップが現在の“シンボル”をしめします。（キャレットの上の関数プロトタイプや見出しであることもありますが。）
+
+![Status Bar](status_bar.png)
+
+ポップアップをクリックして現在のドキュメントの全てのシンボルのリストを出し、他のシンボルへキャレットを移動させることができます。これは以下のように示されます。
+
+![Function Pop Up](function_pop_up.png)
+
+キーボード操作に関しては、以下のようなパネルを開くNavigation &#x2192; Go to Symbol… (&#x21E7;&#x2318;T)があります。このペインの中身はステータスバーのポップアップと同じですが、このパネルは[Go to File… panel][GoToFile] に似たようなフィルタリングをサポートします。（つまりフィルタリングの文字列は省略形として扱われ、照合はその省略形がどのくらいフィットするかによってランクされます。
+
+![Symbol List](symbol_list.png)
+
+パネルは表示されたままになりドキュメントが編集されるにつれて自動的にアップデートされます。リストの中のアイテムをシングル・クリックすると、キャレットはクリックされたシンボルへ移動します。ダブルクリックすると同じ動作をしますが、パネルは閉じられます。
+
+### リストをカスタマイズする {customizing_the_list}
+
+シンボルリストは[language grammars][LanguageGrammars] と [scope selectors][ScopeSelectors]を使用して動作します。ランゲージグラマーはドキュメントのそれぞれのエレメントに名前を付与し、スコープセレクタはその名前に基づいてドキュメントのsubsetをターゲットにすることができます。普通は、そのパラレルはHTMLとCSSです。例えば、バックグラウンドを青に設定する[テーマアイテム][Themes]を作り、その後、スコープセレクタでドキュメントのどのエレメンツにこのテーマ（青いバックグラウンド
+）が適用されるのを必要とするかを選びます。
+
+
+視覚の設定を変えるのではなく、（一般的に）視覚ではない背ていを変更するという点以外は、[バンドル設定][PreferencesItems]もテーマアイテムと同じように動作します。例外のひとつは`showInSymbolList`です。これを`1`に設定して、例えば全ての\関数の名前をターゲットにするスコープセレクタを使用することによって、シンボルリストで使うための、ドキュメントから全ての関数の名前を抽出するクエリとしてスコープセレクタを使っていることになります。
+
+シンボルリストをpopulateするために必要なのは:
+
+ 1. ランゲージグラマーが表示したいものに名前を付与していると確かめること。
+
+ 2. `showInSimbolList`を`1`に設定して、シンボルリストに必要としているシンボルにマッリするスコープセレクタをを作る、バンドル設定アイテムを作ること。
+
+
+`showInSymbolList`設定に加えて、抽出されるテキストを基に機能する一つかそれ以上の正規表現substitutionsである`symbolTransformation`があります。この設定の値は`s/«regexp»/«format»/«options»` でなければいけません。オプションとして、`:`とさらなるsubstitutionsを追加できます。また、値にコメントを付加することも可能です。これは、`#`で始まり、次のnewlineの最後に終わります。
+
+なので、もしリストに（一つかそれ以上の`#`マークで始まる、Markdownの見出しを表示したい場合、まず初めにランゲージグラマーで次のように特定することによって、このルールによって特定されうるマークダウンのために、[ランゲージグラマー][LanguageGrammars]が見出しに名前を付与していることを確認します
+
+    {  name = 'markup.heading.markdown';
+       match = '^#{1,9}\s*(.*)$';
+    },
+
+
+これで`markup.heading.markdown`というスコープセレクタを使って全ての見出しをターゲットにできます。これでバンドル設定アイテム簡単に作成できます:
+
+
+    {  showInSymbolList = 1;   }
+
+
+
+このままでは最初の`#`マークまでリストに含んでしまうので、理想的ではありません。実際のタイトルに（ランゲージグラマーを通じて）名前を付与するか、もしくは最初の`#`を取り除くために正規表現substitutionを実行することができます。後者は好都合です。これらをインデントへ変え、設定アイテムを次のように変えることによってできます。<!-- TODO: I can't understand the passage well. I will revisit this passage. I hope the actual code helps. -->
+
+    {  showInSymbolList = 1;
+       symbolTransformation = '
+          s/(?<=#)#/ /g;          # change all but first # to m-space
+          s/^#( *)\s+(.*)/$1$2/;  # strip first # and space before title
+       ';
+    }

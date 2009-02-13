@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>beforeRunningCommand</key>
+	<string>nop</string>
+	<key>command</key>
+	<string>#!/usr/bin/python
+# encoding: utf-8
+
+import sys
+import os
+import re
+import codecs
+
+sys.stdout = codecs.getwriter('utf-8')(sys.stdout)
+sys.stdin  = codecs.getreader('utf-8')(sys.stdin)
+
+bundleLibPath = os.environ["TM_BUNDLE_SUPPORT"] + "/lib/"
+
+def wunichr(dec):
+    return ("\\U%08X" % dec).decode("unicode-escape")
+
+def snp_escape(s):
+    return re.sub(r"(?=[$`\\])", r'\\', s)
+
+def codepoints(s):
+    hs = 0
+    for c in s:
+        c = ord(c)
+        if 0xdc00 &lt;= c &lt;= 0xdfff and hs:
+            yield ((hs&amp;0x3ff)&lt;&lt;10 | (c&amp;0x3ff)) + 0x10000
+            hs = 0
+        elif 0xd800 &lt;= c &lt;= 0xdbff:
+            hs = c
+        else:
+            yield c
+    if hs:
+        yield hs
+
+text = sys.stdin.read()
+
+tradsim = unicode(os.popen("grep 'S' '" + bundleLibPath +"zhSimtradHanzi.txt'").read(), "UTF-8").strip()
+
+if not tradsim:
+    print "Error"
+    sys.exit(206)
+
+conv = {}
+
+for c in tradsim.split('\n'):
+    trad, dummy, sim = c.split('\t')
+    conv[trad] = sim
+
+cnt = 1
+for c in codepoints(text):
+    try:
+        sim = conv[wunichr(c)]
+        if sim.find(" ") != -1:
+            sys.stdout.write(u"${" + str(cnt) + ":{" + wunichr(c) + u"=" + u"|".join(sim.split(' ')) + u"\}}")
+            cnt += 1
+        else:
+            sys.stdout.write(sim)
+    except:
+        sys.stdout.write(snp_escape(wunichr(c)))
+
+if cnt &gt; 1: sys.stdout.write(u"${0:}")
+</string>
+	<key>input</key>
+	<string>selection</string>
+	<key>keyEquivalent</key>
+	<string>^~@c</string>
+	<key>name</key>
+	<string>Traditional &gt; Simplified</string>
+	<key>output</key>
+	<string>insertAsSnippet</string>
+	<key>uuid</key>
+	<string>2B54167E-A468-452A-BB80-11989C735891</string>
+</dict>
+</plist>

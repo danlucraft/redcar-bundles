@@ -1,0 +1,193 @@
+# コマンド {commands}
+
+コマンドはbashや`#!/usr/bin/ruby`のように最初の行にあるshebang記法で定められたインタープリターで実行されるスクリプトです。
+
+Bundles &#x2192; Bundle Editor &#x2192; Edit Commands…を洗濯してバンドルエディタを開きコマンドを編集することができます。
+
+![Command Editor](command_editor.png)
+
+コマンドが実行される前に、現在のドキュメントかプロジェクトの中にある編集された全てのドキュメントが保存されます。これは、一番上のポップアップで設定できます。ドキュメントは変更された場合のみ保存されます。
+
+## Command Input {command_input}
+
+コマンドを実行するときには、いろいろな[環境変数][EnvVariables]を使用することができます。また、コマンドでは、インプット（標準入力）として、ドキュメント全体を読みこむこともできるほか、選択されたテキストを読みこむことができます。
+
+<!-- TODO: use of the word "fallback" and "unit" may requrie reconsideration. -->
+
+もしインプットが“Selected Text”に設定されているにもかかわらず、何も選択されていない場合は、他のインプットポップアップで設定されているユニットにフォールバックします。フォールバックが使用され、もしアウトプットが“Replace Selection”に設定されていれば、インプットは置換されます。もし`tr '[a-z]' '[A-Z]'`(小文字を大文字に)というコマンドを実行して、インプットがSelected Textに設定されていて、一語にフォールバックする場合し、アウトプットがReplace Selected Textに設定されている場合、選択範囲なしでコマンドを実行すると、現在の単語を大文字に変換します。
+
+![Input Fallback Options](input_fallback_options.png)
+
+フォールバックユニットについてですが、_Scope_(スコープ)については少し説明が必要でしょう。インプットにスコープをセットすると、コマンドのスコープセレクタにマッチしない最初の文字を前方と後方へ向かって検索します。そして、その境界の最初から最後までをインプットとして扱います。
+
+つまり、もしランゲージグラマーでURLをマークアップ際に、このスコープに`markup.underline.url`を指定した状態で、_Selection or Scope_と設定すれば、URL上にキャレットがあるときにこのコマンドが実行されれば、URLをインプットとして取得します。
+
+コマンド名が例えば、メニュー上などのバンドルエディタの外で表されている場合で、フォールバックユニットが必要な時は、テキストが選択されているかどうかに従って“_Unit_ / Selection”を“_Unit_” もしくは “Selection”に置き換えられます。_Unit_に使われるテキストはフォールバックユニットをしめす一つの単語でなくてはいけません。すなわちCharacter、 Word、 Line、 Scope、 Documentということです。もし“Encrypt Document / Selection”という名前のコマンドを作成し、インプットにSelected Textを指定し、フォールバックとして、Documentを指定すると、このコマンドは、何もテキストが選択されていない場合には、“Encrypt Document”として実行され、テキストが選択されている
+場合には、“Encrypt Selection.”として実行されます。
+
+## コマンドアウトプット {command_output}
+
+アウトプット（標準出力）ではさまざまなことができます。以下ではさまざまなオプションを説明します。
+
+ * _Replace Selected Text / Document_ — これは主に選択範囲やドキュメントを変形するコマンドで使われます。例えば、ドキュメント全体に`tidy`を実行したり、標準入力から読み込まれた行をソートしたりするときに使われます。
+
+ * _Insert as Text / Snippet_ — 生成されたアウトプットがドキュメントに挿入されるコマンド、例えば、(標準入力からキャレットの位置までのドキュメントを解析して)足りない閉じるタグを挿入したりするときに使うことができます。
+
+<!-- TODO: What's the good word for "close tag"? -->
+
+ * _Show as Tool Tip_ — これは、主に選択範囲をペースティング・サービスに送信したりしたあとに、そのアクションのステータスをツールチップを使ってリポートするといったようなことに使われます。
+
+   ![Tool Tip Output](tool_tip_output.png)
+
+ * _Show as HTML_ — アプトプットをただ単にHTMLとして表示します。これについての利点は次のセクションで説明します。 Xcode Buildのように、インクリメンタルに進捗をリポートする必要があるコマンドではとても有用です。
+
+   ![Build With Xcode](build_with_xcode.png)
+
+ * _Create New Document_ — MarkdownをHTMLに変換するというような変換が必要な場合は、今使っているドキュメントを上書きするよりも、結果を新しいドキュメントで表示させるほうがよいかもしれません。そのような場合には、このオプションが最適です。また、結果をドキュメントして表示するのがふさわしいコマンドもあります。例えば、`diff`の結果は新しいドキュメントでシンタックス・カラーリングがある状態で見た方がよいでしょう。
+
+   ![Diff Result](diff_result.png)
+
+
+## HTML アウトプット {html_output}
+
+HTMLアウトプットには、[WebKitの](http://webkit.opendarwin.org/)HTML/CSSエンジンの機能に加えていくつかの機能があります。
+
+ 1. HTMLアウトプットを使ったコマンドが実行中でも、TextMateがストール（停止）してしまうことはありません。進捗インディケータがコマンドが実行されている間に右上の角に表示されます。もし終了(abort)したい場合は、アウトプットのウインドウを閉じるだけです。（閉じようとすると確認のダイアログが表示されます。）
+
+    ![Html Output Progress Indicator](html_output_progress_indicator.png)
+
+ 2. アウトプットの一部で実行されているJavaScriptは`TextMate`オブジェクトで`system`メソッドにアクセスできます。これは、[Dashboard widgetsで提供されている](http://developer.apple.com/documentation/AppleApplications/Conceptual/Dashboard_ProgTopics/Articles/CommandLine.html)ものをまねたものです。`TextMate`オブジェクトは`isBusy`プロパティを持っていて、プログレスインディケータをコントロールするために`true`もしくは`false`に設定可能です。一番簡単な例では、プログレスインディケータをユーザがスタート／ストップできるようにするもので以下のようになります。
+
+        cat <<'EOF'
+           <a href="javascript:TextMate.isBusy = true">Start</a>
+           <a href="javascript:TextMate.isBusy = false">Stop</a>
+        EOF
+
+    ユーザのブラウザで開くためのリンクを作るためには`system`メソッドが使用できます。
+
+        cat <<'EOF'
+           <a href="javascript:TextMate.system(
+              'open http://example.com/', null);">Open Link</a>
+        EOF
+
+    `system`メソッドはコマンドのスタート（とストップ）を非同期的に実行できるため、コマンドからの標準出力（エラー）を読み込んだりや
+コマンドの標準入力データを送ることができます。より詳しい情報は[the Dashboard documentation](http://developer.apple.com/documentation/AppleApplications/Conceptual/Dashboard_ProgTopics/Articles/CommandLine.html)を参照してください。
+
+ 3. HTMLアプトプットでは、元のドキュメントに戻るために、[TextMate URL スキーム][TextMateURLScheme]を使用できます。例えば、（ビルドコマンドやバリデータのように）コマンドが現在のドキュメントのエラー（や警告）をレポートしたりするときに便利です。また、`svn status`のようにコマンドがプロジェクト内の他のファイルを参照する際にも便利です。
+
+　4. TigerかSchuberts [PDF Browser Plug-in](http://www.schubert-it.com/pluginpdf/)を使えば、HTMLアウトプットにPDFファイルを表示させることもできます。これは主にLaTeXのような活字を組むプログラムには便利でしょう。これによって、TextMateから離れることなく活字をセットして結果を確認することができます。
+
+ 5. 他のページにリダイレクトして、HTMLアウトプットをブラウザへのショートカットのように使うこともできます。例えば、PHPでは“Documentation for Word”というコマンドは次のような出力をします。
+
+        echo "<meta http-equiv='Refresh'
+                content='0;URL=http://php.net/$TM_CURRENT_WORD'>"
+
+WebKitにある（おそらく）セキュリティー上の制約のために、`file:`URL
+スキームを使用してのHTMLアウトプットをディスク上の他のファイルへリダイレクトしたり、リンクしたり、参照することはできません。その代わりに、`tm-file:` URL スキームを使って、`file:`と全く同じようなことができますが、スキームを超えての制約はありません。
+
+HTMLアウトプットの使い方に関してのより詳しい説明は[the TextMate blog](http://macromates.com/blog/archives/2005/09/28/html-output-for-commands/)を参照してください。.
+
+## コマンドのアウトプットタイプを変更する {changing_output_type}
+
+コマンド内でコマンドのアウトプットオプションを変更したいときもあるかもしれません。例えば、現在の単語のドキュメンテーションを調べるコマンドは、もしドキュメンテーションが見つからなければ、"no documentation found"というツールチップを見せたいですし、そうでない場合は、結果をHTMLアウトプットで表示したいでしょう。
+
+![Command Output Options](command_output_options.png)
+
+TextMateには、この目的で使うために定期済みのbash関数があいます。これはの関数は任意に最初に標準出力へ`echo`された引数を文字列としてとります。
+
+この関数は初期のアウトプットオプションが"Show as HTML"_ではない_ときに使用できます。以下が関数のリストです。
+
+ * `exit_discard`
+ * `exit_replace_text`
+ * `exit_replace_document`
+ * `exit_insert_text`
+ * `exit_insert_snippet`
+ * `exit_show_html`
+ * `exit_show_tool_tip`
+ * `exit_create_new_document`
+
+例えば、Diffバンドルには"[Diff] Document With Saved Copy"というコマンドがあります。これは、現在のドキュメントとディスクに保存されたバージョンを比較するものです。デフォルトのアウトプットオプションは、(diffの結果をシンタックス・カラーリングで表示した)新規ドキュメントの作成です。しかし、もしディクスにファイルがない場合は(ツールチップとして)エラーを表示します。これは、次のようなコマンドを使うことで可能になります。
+
+    if [[ -e "$TM_FILEPATH" ]] # does the file exist?
+       then diff -u "$TM_FILEPATH" -
+       else exit_show_tool_tip "No saved copy exists."
+    fi
+
+## 便利なbash関数 {useful_bash_functions}
+
+コマンドを実行するときには、以下に挙げる定期済みのbash関数を使うと便利です。
+
+ * `require_cmd` — これは、与えられた最初の引数がパスに存在することを確認します。存在しない場合は、ユーザーにエラーをレポートし、コマンドを中断します。もし、OS Xに付属しないコマンドを使わなければいけないときで、あなたが作ったものを配布したいときに便利です。例えば、Subversionコマンドは以下のように始まります。
+
+        require_cmd svn
+
+ * `rescan_project` — 現在のところプロジェクトドロワーはフォーカスがあたったときだけアップデートされ、外部から変更された場合は現在のファイルをリロードします。もしあなたのコマンドが（ディスク上の）現在のドキュメントが修正したり、もしくは、現在のドキュメントのあるフォルダのファイルを変更するときに便利です。
+
+ * `pre` — このコマンドは標準入力からテキストを読み込みHTMLのエスケープをされたものを標準出力へ出力します。その際にテキストをワードラップが使用可能になっていますが`<pre>…</pre>`の中に入れます。そして、`<`と`>`と`&`をHTMLエンティティに変換します。これは、生のアウトプットをHTMLアウトプットオプションを使って表示したいときに便利です。もっともシンプルな例では、コマンドとして`pre`を指定して、インプットに"Entire Document"、そして、アウトプットに"Show as HTML"を設定すればよいだけです。しかしたいていは、`pre`にパイプでなんらかのコマンドを結果として表示したいでしょう。例えば、次のように。
+
+        make clean|pre
+
+この関数はすべて`$TM_SUPPORT_PATH/lib/bash_init.sh`で定義されています。また、(bashから)HTML作成を助ける関数も`$TM_SUPPORT_PATH/lib/html.sh`で定義されています。しかし、このファイルはデフォルトでは、ソースとして使われません。そのためこのファイルで定義されている関数を使うためには、以下のようにソースとして取り込みます。
+
+
+    . "$TM_SUPPORT_PATH/lib/html.sh"
+    redirect "http://example.com/"
+
+
+## Dialogs (Requesting Input & Showing Progress) {dialogs_requesting_input_showing_progress}
+
+TextMate ships with CocoaDialog so this can be used out-of-the-box. You call [CocoaDialog](http://cocoadialog.sourceforge.net/documentation.html) (follow the link for full documentation) with the type of dialog you want and it will return two lines of text, the first is the button pressed (as a number) and the second is the actual result. While a little cumbersome, here is an example of how to request a line of text and only proceed if the user did not cancel:
+
+    res=$(CocoaDialog inputbox --title "I Need Input" \
+        --informative-text "Please give me a string:" \
+        --button1 "Okay" --button2 "Cancel")
+
+    [[ $(head -n1 <<<"$res") == "2" ]] && exit_discard
+
+    res=$(tail -n1 <<<"$res")
+    echo "You entered: $res"
+
+We first call CocoaDialog to get a string of text. Then we test if the first line returned (using `head`) is equal to 2, which corresponds to the Cancel button and if so, we exit (using the discard output option). We then go on to extract the last line of the result and `echo` that.
+
+![Cocoadialog Inputbox](cocoadialog_inputbox.png)
+
+Another common dialog type is the progress indicator. The determinate version reads from stdin the value and text to use for each step. This means we can simply pipe that info to CocoaDialog in each step of our command, a simple example could be:
+
+    for (( i = 1; i <= 100; i++ )); do
+        echo "$i We're now at $i%"; sleep .05
+    done|CocoaDialog progressbar --title "My Program"
+
+![Cocoadialog Determinate Progress](cocoadialog_determinate_progress.png)
+
+Often though we want to show the indeterminate version. This dialog stays onscreen for as long as its stdin is open. This means we can use a pipe like above but if we want a result back from the command that we are executing, we can instead redirect the commands stderr to an instance of CocoaDialog (using process substitution), this is shown in the following example:
+
+    revs=$(svn log -q "$TM_FILEPATH"|grep -v '^-*$' \
+    	2> >(CocoaDialog progressbar --indeterminate \
+    		--title "View Revision…" \
+    		--text "Retrieving List of Revisions…" \
+    	))
+    echo "$revs"
+
+![Cocoadialog Indeterminate Progress](cocoadialog_indeterminate_progress.png)
+
+CocoaDialog also has other dialog types, like a pop-up list, file panel, text box and so on, but as an alternative there is also AppleScript.
+
+If you open Script Editor and then open the Standard Additions dictionary (via Open Dictionary…) there are commands under User Interaction which allow various dialogs. One caveat though, in current version (1.5) TextMate will not listen to AppleScript commands while executing shell commands with an output option other than Show as HTML. This means that instead of targeting TextMate, you should use `SystemUIServer` or similar and in addition to that, since `SystemUIServer` needs to be activated to show the dialog (with focus) you need to reactivate TextMate. Here is an example of a command that allows selecting an item from a list:
+
+    res=$(osascript <<'AS'
+        tell app "TextMate"
+            activate
+            choose from list { "red", "green", "blue" } \
+                with title "Pick a Color" \
+                with prompt "What color do you like?"
+        end tell
+	AS)
+
+	echo "You selected: $res"
+
+	osascript -e 'tell app "TextMate" to activate' &>/dev/null &
+
+The first part is just a small AppleScript which is executed from shell via `osascript` (reading the script from stdin using a here-doc). The last part is the line that gives focus back to TextMate but because TextMate will not respond to this event before the shell command has completed its execution, we need to run it asynchronously, which is done by adding `&` to the end of the command. The `&>/dev/null` part is to detach stdout/error from the shell command so that this does not cause a stall.
+
+![AppleScript Choose From List](as_choose_from_list.png)
+

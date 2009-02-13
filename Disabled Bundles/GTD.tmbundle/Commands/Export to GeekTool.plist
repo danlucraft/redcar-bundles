@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>beforeRunningCommand</key>
+	<string>saveActiveFile</string>
+	<key>command</key>
+	<string>#!/usr/bin/env ruby  
+
+require "#{ENV['TM_SUPPORT_PATH']}/lib/textmate"
+
+$myPath = ENV['TM_DIRECTORY'] 
+$tags = [] #user defined contexts
+
+def readContexts(a)
+  # processes contexts.gtd into script  
+  context, tabCommand, tabString, regex, color = a.split(/\|/)
+  $tags.push({:label =&gt; context, :regexp =&gt; regex, :color =&gt; color, :matches =&gt; []})   
+end
+
+def TextMate.file_link (file, line = 0)
+  return "txmt://open/?url=file://" +
+    file.gsub(/[^a-zA-Z0-9.-\/]/) { |m| sprintf("%%%02X", m[0]) } +
+    "&amp;amp;line=" + line.to_s
+end  
+
+# the contexts.gtd file is read, and converted into $contexts
+file = File.open($myPath+"/contexts.gtd", "r")
+file.each do |line|
+  readContexts(line)
+end 
+
+class ExList
+  def initialize
+    @values = []
+  end
+  def contains(test)
+    #puts @values.class
+    found = true
+    @values.each do |item|
+      if test == item.chomp
+        found = false
+      end
+    end
+    return found
+  end
+  def add(item)
+    @values.push item
+  end
+  def print
+    puts @values
+  end
+end
+
+xFile = File.open($myPath+"/excluded.gtd", "r")
+
+myList = ExList.new
+
+xFile.each do |line|
+  myList.add(line)
+end
+
+# sorting happens     
+todoList = ""
+$tags.each do |tag|  
+  if tag[:label] != "DONE"
+    context = tag[:label]
+    todoList += context + "\n"  
+    matches = 0 
+    myFiles = Dir.entries($myPath)
+    myFiles.each do |fileName|
+      if (fileName[-3,3] == "gtd") and (fileName != "contexts.gtd") and (fileName != "excluded.gtd") and (myList.contains(fileName))
+        lineno = 0
+        mFile = File.open(fileName) 
+        mFile.each do |line|
+          lineno = lineno + 1
+          re = /\s/
+          ctask = re.match(line)
+          if ctask.pre_match == context
+            results = (fileName[0..-5] + ":" + lineno.to_s + " - " + ctask.post_match)
+            todoList += results
+            matches += 1
+          end        
+        end
+      end
+    end
+    if matches == 0
+      todoList += "none\n"
+    end
+    todoList += "\n"
+  end 
+end      
+File.open($myPath + "/todoList.txt", "w") {|f|
+  f &lt;&lt; todoList}
+puts "GeekTool Updated."
+</string>
+	<key>input</key>
+	<string>none</string>
+	<key>keyEquivalent</key>
+	<string>^G</string>
+	<key>name</key>
+	<string>Export to GeekTool</string>
+	<key>output</key>
+	<string>showAsTooltip</string>
+	<key>scope</key>
+	<string>text.plain.gtd</string>
+	<key>uuid</key>
+	<string>1914B9FB-38EE-4340-B431-28ED242F5D4D</string>
+</dict>
+</plist>

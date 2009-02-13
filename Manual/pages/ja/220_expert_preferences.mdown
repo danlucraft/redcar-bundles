@@ -1,0 +1,116 @@
+# エキスパートのための設定 {expert_preferences}
+
+TextMateにはGUIでは見えない設定がいくつかあります。
+
+これらの設定の変更は [`defaults`](http://developer.apple.com/documentation/Darwin/Reference/ManPages/man1/defaults.1.html) シェルコマンドで可能です。しかし、TextMateが起動していないときにこれをしなければいけません。
+
+次のシンタックスのように、与えられた値(value)に対してキー(key)を設定します:
+
+    defaults write com.macromates.textmate «key» «value»
+
+いつもデフォルトの値を使ってキーをリセットできます。:
+
+    defaults delete com.macromates.textmate «key»
+
+もしくは以下のように使い、値を読むことができます。:
+
+    defaults read com.macromates.textmate «key»
+
+
+## `NSDragAndDropTextDelay` {nsdraganddroptextdelay}
+
+あなたが、選択部分の上でマウスをクリックしてマウスをうごかすと、もしあなたが15ミリセカンド待ち、それから選択範囲をドラッグしない限り、TextMateは新しい選択範囲を作ります。この遅延時間はこの設定の値によって変えることができます。
+
+値をゼロ以下（例えば、`-1`）にセットすると選択範囲をドラッグすることができなくなります。それは、選択範囲の中でマウスをクリックをするとすぐにそれをすぐに感知し、（ボタンが押されている間にマウスを動かせば、）そのポイントから新しい選択範囲を作るという言う意味です。
+
+ゼロにセットすればすぐにドラッグを始めます。
+
+例:
+
+    defaults write com.macromates.textmate NSDragAndDropTextDelay 0
+
+
+## `NSRecentDocumentsLimit` {nsrecentdocumentslimit}
+
+これは"Open Recent"メニューに保存されているドキュメントの数を設定します。デフォルト値は25です。
+
+例:
+
+    defaults write com.macromates.textmate NSRecentDocumentsLimit 50
+
+## `OakBundleItemsPopUpMenuKeyEquivalent` {oakbundleitemspopupmenukeyequivalent}
+
+ステータスバーにあるギアメニューを開くキーボードショートカット。このキーは[system key bindings file](http://macromates.com/blog/archives/2005/07/05/key-bindings-for-switchers/)で説明されています。デフォルトの値は"^\033"(コントロール エスケープです)。
+
+キーコードに関する詳しい情報は、[このメール](http://lists.macromates.com/pipermail/textmate/2006-April/009955.html)を参照してください。
+
+## `OakBundleManagerDisambiguateMenuFontSize` {oakbundlemanagerdisambiguatemenufontsize}
+
+もしあなたがメニューで使われているタブトリガーと対応するキーと似たものを明確にするためのフォントが小さすぎると思うなら、次のように実行してください。
+
+    defaults write com.macromates.textmate OakBundleManagerDisambiguateMenuFontSize 14
+
+## `OakDefaultBundleForNewBundleItems` {oakdefaultbundlefornewbundleitems}
+
+
+あなたがはじめにバンドルを選択せずに、バンドルエディタで新しいアイテムを作ると、このデフォルトキーによって使われるUUIDのバンドルがターゲットとして使われます。
+
+<!-- TODO: Review the paragraph above. When you create a new item in the bundle editor without having selected a bundle first, then the bundle with the UUID held by this defaults key is used as the target. -->
+
+これは自動的にあなたが作る最初のバンドルに設定されます。これをどう変更するかの例は [このメール](http://lists.macromates.com/pipermail/textmate/2006-May/010651.html)を見てください。
+
+## `OakDefaultLanguage` {oakdefaultlanguage}
+
+新規の（無題の）ドキュメントのデフォルトの言語を設定します。値は使われる言語のUUIDを使います。
+
+
+さらなる情報は[メーリングリストのこのメッセージ](http://lists.macromates.com/pipermail/textmate/2006-February/008276.html)をみてください。
+
+
+## `OakDisableSessionRestore` {oakdisablesessionrestore}
+
+あなたがTextMateを起動するとき、最後に使ったプロジェクト／ドキュメントが開きます。しかし、次のコマンドを実行することによってこの機能を無効にできます。
+
+    defaults write com.macromates.textmate OakDisableSessionRestore 1
+
+
+## `OakDocumentCustomFSMetaData` {oakdocumentcustomfsmetadata}
+
+TextMateがメタデータ([`setxattr`](http://developer.apple.com/documentation/Darwin/Reference/ManPages/man2/setxattr.2.html) replacement)を保存するときに使う関数のためのファイルシステムの配列です。メタデータはAppleDoubleフォーマットで保存されます。デフォルト値は`( afpfs, nfs, msdos )`になっています。こうなっている理由は、`setxattr`がこれらのファイルシステムでカーネルパニックを発生させるからです。([rdar://4162474](rdar://problem/4162474))
+
+例:
+
+    defaults write com.macromates.textmate \
+       OakDocumentCustomFSMetaData '( afpfs, nfs, msdos, hfs )'
+
+
+## `OakDocumentDisableFSMetaData` {oakdocumentdisablefsmetadata}
+
+詳しい情報は[extended attributes][ExtendedAttributes]をみてください。
+
+## `OakFindPanelDisableHistory` {oakfindpaneldisablehistory}
+
+これは、検索パネルの履歴を残さないようにするためです。この設定はユーザーの中に検索ダイアログでタブキーを押したときにクラッシュを経験した人がいるからです。履歴のコントロールによってこのクラッシュが発生します。現在のところ、このコントロールを使えなくすることでのみこの問題を回避できます。
+
+    defaults write com.macromates.textmate OakFindPanelDisableHistory 1
+
+## `OakToolTipMouseMoveIgnorePeriod` and `OakToolTipMouseDistanceThreshold` {oaktooltipmousemoveignoreperiod_and_oaktooltipmousedistancethreshold}
+
+コマンドをツールチップを出したときに最初の１秒の間はマウスを動かしてもツールチップは閉じません。１秒後ツールチップが閉じます。ツールチップを閉じるためには、少なくとも5ピクセル分
+マウスを動かす必要があります。`OakToolTipMouseMoveIgnorePeriod`と`OakToolTipMouseDistanceThreshold`を使うことでこの値を変更できます。
+
+## `OakWrapColumns` {oakwrapcolumns}
+
+これは、View → Wrap Column サブメニューで使われる値の配列です。デフォルトでは、40と78が使われています。
+
+
+例:
+
+    defaults write com.macromates.textmate OakWrapColumns '( 60, 70, 80, 120 )'    
+
+## `OakWordsExcludedFromCapitalization` {oakwordsexcludedfromcapitalization}
+
+The Text &#x2192; Convert &#x2192; to Titlecase action (&#x2303;&#x2325;U) は以下の配列の単語を例外として扱います。
+
+デフォルト値は以下の通り。 `( a, an, and, at, but, by, else, for, from, if, in, nor, of, off, on, or, out, over, the, then, to, up, when )`
+

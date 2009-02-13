@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>beforeRunningCommand</key>
+	<string>nop</string>
+	<key>command</key>
+	<string>#!/usr/bin/python
+# coding=utf-8
+
+# written by Hans-Jörg Bibiko; bibiko at eva.mpg.de
+
+import sys
+import unicodedata
+import re
+
+from os import popen2, path, environ as env
+
+tm_support_path = path.join(env["TM_SUPPORT_PATH"], "lib")
+if not tm_support_path in env:
+     sys.path.insert(0, tm_support_path)
+
+import dialog
+import tm_helpers
+
+if "TM_SELECTED_TEXT" in env:
+     print "Please remove the selection firstly."
+     sys.exit(206)
+
+line, x = env["TM_CURRENT_LINE"], int(env["TM_LINE_INDEX"])
+
+inputleft = unicode(line[:x], "UTF-8")
+
+if len(inputleft) == 0:
+     sys.exit(200)
+
+tail = unicode(line[x:], "UTF-8")
+char = inputleft[-1]
+head = inputleft[:-1]
+
+# get the suggestion for 'char' by using grep against charList.txt
+# and replace all newline by -
+inp, out = popen2("grep '^"+char.encode("UTF-8")+"' '"+path.join(env["TM_BUNDLE_SUPPORT"], "lib/greekList.txt' | perl -pe 's/\n/-/g'"))
+inp.close()
+suggestions = list(unicode(out.read(), "UTF-8"))[1:-1]
+out.close()
+
+if len(suggestions) == 0:
+    mes = "Nothing found for '" + char + "'."
+    sys.__stdout__.write(mes.encode("UTF-8"))
+    sys.exit(206)
+
+if len(suggestions) == 1:
+    sys.__stdout__.write(head.encode("UTF-8"))
+    sys.__stdout__.write(re.sub(r'\\','',suggestions[0]).encode("UTF-8"))
+    sys.__stdout__.write(tail.encode("UTF-8"))
+    sys.exit(201)
+try:
+    result=dialog.menu([tm_helpers.sh_escape(a) + "\t" + unicodedata.name(a, "U+%04X" % ord(a)) for a in suggestions])
+    if not result:
+        sys.exit(200)
+
+    sys.__stdout__.write(head.encode("UTF-8"))
+    sys.__stdout__.write(re.sub(r'\\','',result.split('\t')[0]).encode("UTF-8"))
+    sys.__stdout__.write(tail.encode("UTF-8"))
+    sys.exit(201)
+except KeyError:
+    sys.exit(206)
+</string>
+	<key>fallbackInput</key>
+	<string>line</string>
+	<key>input</key>
+	<string>selection</string>
+	<key>keyEquivalent</key>
+	<string>^~@u</string>
+	<key>name</key>
+	<string>Convert to Greek Character…</string>
+	<key>output</key>
+	<string>showAsTooltip</string>
+	<key>uuid</key>
+	<string>AC1FF4B5-2F93-4816-AA54-F4B150AFEFD2</string>
+</dict>
+</plist>

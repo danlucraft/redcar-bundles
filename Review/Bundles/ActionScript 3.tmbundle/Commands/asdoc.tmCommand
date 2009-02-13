@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>beforeRunningCommand</key>
+	<string>nop</string>
+	<key>command</key>
+	<string>#!/usr/bin/env ruby
+
+BUN_SUP = "#{ENV['TM_BUNDLE_SUPPORT']}"
+require BUN_SUP + '/lib/as_declarations'
+
+line_number = ENV['TM_LINE_NUMBER'].to_i
+doc = STDIN.read.split("\n")
+next_line = doc[line_number].to_s
+
+class_regexp = /\b(class|interface)\b/
+constructor_regexp = /public\s+function\s+([A-Z]\w+)\s*\(.*\)\s*$/
+override_regexp = /override.*function.*\(/
+
+if next_line =~ class_regexp
+	print class_doc
+elsif next_line =~ constructor_regexp
+	print constructor_doc
+elsif next_line =~ override_regexp
+	print inherit_doc	
+else
+	print private_doc
+end</string>
+	<key>input</key>
+	<string>document</string>
+	<key>name</key>
+	<string>Documentation Block</string>
+	<key>output</key>
+	<string>insertAsSnippet</string>
+	<key>scope</key>
+	<string>source.actionscript.3</string>
+	<key>tabTrigger</key>
+	<string>doc</string>
+	<key>uuid</key>
+	<string>E9820D0D-76E8-43D2-901B-245087D74409</string>
+</dict>
+</plist>

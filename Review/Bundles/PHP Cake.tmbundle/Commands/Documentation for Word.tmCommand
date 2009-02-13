@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>beforeRunningCommand</key>
+	<string>nop</string>
+	<key>command</key>
+	<string>cat &lt;&lt;STR
+&lt;html&gt;
+	&lt;head&gt;
+		&lt;meta http-equiv="Refresh" content="0; URL=http://api.cakephp.org/1.2/search.php?query=${TM_SELECTED_TEXT:-$TM_CURRENT_WORD}"&gt;
+		&lt;title&gt;Searching...&lt;/title&gt;
+	&lt;/head&gt;
+
+	&lt;body&gt;
+	&lt;/body&gt;
+&lt;/html&gt;
+STR</string>
+	<key>input</key>
+	<string>none</string>
+	<key>keyEquivalent</key>
+	<string>^H</string>
+	<key>name</key>
+	<string>Documentation for Word</string>
+	<key>output</key>
+	<string>showAsHTML</string>
+	<key>scope</key>
+	<string>text.html.php.cake</string>
+	<key>uuid</key>
+	<string>365F0868-308E-44BC-8781-2B65CBF48B74</string>
+</dict>
+</plist>

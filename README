@@ -1,0 +1,67 @@
+This is a list of people who've contributed to the various bundles. There may
+be omissions or wrongly credited bundles. Some bundles do have more detailed
+credits in their README or embedded in the syntax file(s).
+
+Add your bundle and/or name to the list if it's missing.
+
+ActionScript: Rob Bevan, Dominique Peretti, Simon Gregory
+Ada, Fortran, Inform, Lisp, Pascal, PropertyList, UnixShell: Chris Thomas
+Apache: Simon Gregory
+ASP vb.NET: Thomas Aylott
+Blogging: Brad Choate
+C, Objective-C: Allan Odgaard, Chris Thomas
+CakePHP: Sam DeVore
+Contextual Menu (using OnMyCommand): Eric Hsu, Frédéric Ballériaux
+CSS, PHP: Justin French
+CSS (Preview): Brad Choate
+CVS: Brian Donovan
+Diff: Torsten Becker, Eric Hsu, Allan Odgaard
+Django: Wilson Miner, Paul Bissex
+F-Script: Kevin Ballard
+Graphviz, MIPS, Quake, Modula: Torsten Becker
+Gri: Dan Kelley
+HTML: Justin French, James A Baker
+Perl HTML-Template: Brad Choate
+iCalendar: Chris Thomas, Eric Hsu
+Io: Rob Rix <rix dot rob at gmail>
+Java, XML: Brian Lalor (<see Java.tmbundle/README>)
+JavaScript: Caio Chassot, Kevin Ballard
+Prototype & Script.aculo.us (JavaScript): Justin Palmer, Thomas Aylott & Martin Ström
+JavaScript YUI: Ross Harmes
+Language Definition (TextMate): Jeroen van der Ham
+LaTeX: Eric Hsu, Normand Mousseau, Gaetan Le Guelvouit, Andrew Ellis, Brad Miller, Haris Skiadas
+Logo: Paul Bissex
+Logtalk: Paulo Moura
+Lua: Gavin Kistner
+Makefile: Sune Foldager, Chris Thomas
+Markdown: Hadley Wickham, Paul Bissex
+Matlab: Stephen Thomas, Anders Thid
+Mono: Ian Phillips
+Movable Type: Brad Choate
+OCaml: William D. Neumann
+Outlines: Eric Hsu, Kevin Ballard
+Perforce: Chris Thomas
+Perl: Eric Hsu, Noah Daniels, and Martin Vetter
+Python: Jeroen van der Ham, Brad Miller, Domenico Carbotta, Jay Soffian, Alexander Ross
+Regular Expressions: David Lee, Aristotle at perlmonks.org, Eric Hsu
+Ruby: David Hansson, Kevin Ballard, Torsten Becker, Sune Foldager, James Edward Gray II
+S5: Brad Choate
+Scheme: Mikael Säker
+Setext: Michael Sheets (Borrows from Markdown)
+SQL: Carl Forde, Brad Miller, Michael Sheets
+Subversion (mostly add, commit, update, diff): Chris Thomas
+Subversion (mostly info, blame, log, help): Torsten Becker
+Subversion (in-page Status window enhancements): Thomas Aylott
+Symfony: Fabien Potencier, Jakub Nesetril
+Tcl: Kevin Ballard
+TextMate (Document to HTML commands; CSS from Theme): Brad Choate
+Perl Template Toolkit: Brad Choate
+TODO: Brad Miller
+UnComment: Eric Hsu, Ollivier Robert, Chris Thomas, William N Prater III
+Default:  Show Entities (Kumar McMillan, Eric Hsu, Brad Miller, Max)
+
+Obsolete (but included) tools and bundles:
+
+Invisibles: Eric Hsu
+Command-line "tm" tool (pre 1.1b5): Eric Hsu, Andrew Ellis, Kevin Ballard, Rick Gardner, Marcin
+ 
