@@ -1,6 +1,9 @@
 require 'English'
 require File.dirname(__FILE__) + '/escape'
-require File.dirname(__FILE__) + '/osx/plist'
+#require File.dirname(__FILE__) + '/osx/plist'
+
+$:.push(File.dirname(__FILE__) + '/../../../zerenity/lib/')
+require 'zerenity'
 
 TM_DIALOG = e_sh ENV['DIALOG'] unless defined?(TM_DIALOG)
 
@@ -252,18 +255,14 @@ module TextMate
       # common to request_string, request_secure_string
       def request_string_core(default_prompt, nib_name, options, &block)
         params = default_buttons(options)
-        params["title"] = options[:title] || default_prompt
-        params["prompt"] = options[:prompt] || ""
-        params["string"] = options[:default] || ""
-        
-        return_plist = %x{#{TM_DIALOG} -cmp #{e_sh params.to_plist} #{e_sh(ENV['TM_SUPPORT_PATH'] + "/nibs/#{nib_name}")}}
-        return_hash = OSX::PropertyList::load(return_plist)
-        
-        # return string is in hash->result->returnArgument.
-        # If cancel button was clicked, hash->result is nil.
-        return_value = return_hash['result']
-        return_value = return_value['returnArgument'] if not return_value.nil?
-        
+        params.merge!(:text => options[:prompt] || "",
+                      :title => options[:title] || default_prompt,
+                      :string => options[:default] || "",
+                      :ok_button => params["button1"],
+                      :cancel_button => params["button2"])
+
+        return_value = Zerenity::Entry(params)
+
         if return_value == nil then
           block_given? ? raise(SystemExit) : nil
         else
