@@ -97,12 +97,12 @@ module TextMate
 
       # request a single, simple string
       def request_string(options = Hash.new,&block)
-        request_string_core('Enter string:', 'RequestString', options, &block)
+        request_string_core('Enter string:', options, &block)
       end
       
       # request a password or other text which should be obscured from view
-      def request_secure_string(options = Hash.new,&block)
-        request_string_core('Enter password:', 'RequestSecureString', options, &block)
+      def request_secure_string(options, &block)
+        request_string_core('Enter password:', options.merge(:password => true), &block)
       end
       
       # show a standard open file dialog
@@ -253,14 +253,15 @@ module TextMate
       private
       
       # common to request_string, request_secure_string
-      def request_string_core(default_prompt, nib_name, options, &block)
+      def request_string_core(default_prompt, options, &block)
         params = default_buttons(options)
         params.merge!(:text => options[:prompt] || "",
                       :title => options[:title] || default_prompt,
                       :string => options[:default] || "",
                       :ok_button => params["button1"],
-                      :cancel_button => params["button2"])
-
+                      :cancel_button => params["button2"],
+                      :password => options[:password])
+        $stderr.puts params.inspect
         return_value = Zerenity::Entry(params)
 
         if return_value == nil then
