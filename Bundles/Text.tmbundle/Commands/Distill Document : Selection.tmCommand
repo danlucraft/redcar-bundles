@@ -21,7 +21,8 @@ except re.error, e:
   sys.stderr.write("Invalid pattern: %s" % e)
   sys.exit(1)
 #mate = "\"%s/bin/mate\" -a" % os.environ["TM_SUPPORT_PATH"]
-mate = "bin/redcar -d --log"
+#mate = "bin/redcar -d --log"
+mate = "%s -d --log" % os.environ["REDCAR_BIN"]
 pb = os.popen(mate, "w")
 for line in sys.stdin:
   if pattern.search(line):
