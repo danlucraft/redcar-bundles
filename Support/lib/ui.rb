@@ -2,7 +2,7 @@ require 'English'
 require File.dirname(__FILE__) + '/escape'
 #require File.dirname(__FILE__) + '/osx/plist'
 
-$:.push(File.dirname(__FILE__) + '/../../../zerenity/lib/')
+$:.push(File.dirname(__FILE__) + '/zerenity/lib/')
 require 'zerenity'
 
 TM_DIALOG = e_sh ENV['DIALOG'] unless defined?(TM_DIALOG)
@@ -42,18 +42,21 @@ module TextMate
         color  = string
         prefix, string = string.match(/(#?)([0-9A-F]{3,6})/i)[1,2]
         string = $1 * 2 + $2 * 2 + $3 * 2 if string =~ /^(.)(.)(.)$/
-        def_col = ' default color {' + string.scan(/../).map { |i| i.hex * 257 }.join(",") + '}'
-        col = `osascript 2>/dev/null -e 'tell app "TextMate" to choose color#{def_col}'`
-        return nil if col == "" # user cancelled -- when it happens, an exception is written to stderr
-        col = col.scan(/\d+/).map { |i| "%02X" % (i.to_i / 257) }.join("")
-    
-        color = prefix
-        if /(.)\1(.)\2(.)\3/.match(col) then
-          color << $1 + $2 + $3
-        else
-          color << col
-        end
-        return color
+        return_value = Zerenity::ColorSelection(params)
+        return_value
+        # def_col = ' default color {' + string.scan(/../).map { |i| i.hex * 257 }.join(",") + '}'
+        # col = `osascript 2>/dev/null -e 'tell app "TextMate" to choose color#{def_col}'`
+        # return nil if col == "" # user cancelled -- when it happens, an exception is written to stderr
+        # col = col.scan(/\d+/).map { |i| "%02X" % (i.to_i / 257) }.join("")
+        #     
+        # color = prefix
+        # if /(.)\1(.)\2(.)\3/.match(col) then
+        #   color << $1 + $2 + $3
+        # else
+        #   color << col
+        # end
+        # return color
+        
       end
   
       # options should contain :title, :summary, and :log
