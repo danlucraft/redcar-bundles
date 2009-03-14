@@ -1,8 +1,7 @@
 require 'English'
 require File.dirname(__FILE__) + '/escape'
 #require File.dirname(__FILE__) + '/osx/plist'
-
-$:.push(File.dirname(__FILE__) + '/zerenity/lib/')
+require 'rubygems'
 require 'zerenity'
 
 TM_DIALOG = e_sh ENV['DIALOG'] unless defined?(TM_DIALOG)
