@@ -3,6 +3,7 @@ require File.dirname(__FILE__) + '/escape'
 #require File.dirname(__FILE__) + '/osx/plist'
 require 'rubygems'
 require 'zerenity'
+require File.dirname(__FILE__) + '/redcar'
 
 TM_DIALOG = e_sh ENV['DIALOG'] unless defined?(TM_DIALOG)
 

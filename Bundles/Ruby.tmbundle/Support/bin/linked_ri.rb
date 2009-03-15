@@ -1,4 +1,4 @@
-#!/usr/bin/env ruby -w
+#!/usr/bin/env ruby
 
 # if we are not called directly from TM (e.g. JavaScript) the caller
 # should ensure that RUBYLIB is set properly
@@ -14,6 +14,7 @@ include ERB::Util
 
 tm_var_or_qri = 'RI=$(type -P ${TM_RUBY_RI:-qri})'
 ri_default    = '[[ ! -x "$RI" ]] && RI=$(type -P ri)'
+
 RI_EXE        = `#{tm_var_or_qri}; #{ri_default}; /bin/echo -n "$RI"`
 
 term = ARGV.shift
