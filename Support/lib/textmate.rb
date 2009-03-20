@@ -1,5 +1,5 @@
 #!/usr/bin/env ruby
-require "#{ENV['TM_SUPPORT_PATH']}/lib/osx/plist"
+#require "#{ENV['TM_SUPPORT_PATH']}/lib/osx/plist"
 require "#{ENV['TM_SUPPORT_PATH']}/lib/escape"
 require "#{ENV['TM_SUPPORT_PATH']}/lib/exit_codes"
 
@@ -23,9 +23,9 @@ module TextMate
       default_line = options.has_key?(:file) ? 1 : ENV['TM_LINE_NUMBER']
       options = {:file => ENV['TM_FILEPATH'], :line => default_line, :column => 1}.merge(options)
       if options[:file]
-        `open "txmt://open?url=file://#{e_url options[:file]}&line=#{options[:line]}&column=#{options[:column]}"`
+        `gnome-open "redcar://open?url=file://#{e_url options[:file]}&line=#{options[:line]}&column=#{options[:column]}"`
       else
-        `open "txmt://open?line=#{options[:line]}&column=#{options[:column]}"`
+        `gnome-open "redcar://open?line=#{options[:line]}&column=#{options[:column]}"`
       end
     end
 
