@@ -23,9 +23,10 @@ module TextMate
       default_line = options.has_key?(:file) ? 1 : ENV['TM_LINE_NUMBER']
       options = {:file => ENV['TM_FILEPATH'], :line => default_line, :column => 1}.merge(options)
       if options[:file]
-        `gnome-open "redcar://open?url=file://#{e_url options[:file]}&line=#{options[:line]}&column=#{options[:column]}"`
+        protocol = ENV["REDCAR_FEATURE_PROCESS"] ? "redcar-features" : "redcar"
+        `gnome-open "#{protocol}://open?url=file://#{e_url options[:file]}&line=#{options[:line]}&column=#{options[:column]}"`
       else
-        `gnome-open "redcar://open?line=#{options[:line]}&column=#{options[:column]}"`
+        `gnome-open "#{protocol}://open?line=#{options[:line]}&column=#{options[:column]}"`
       end
     end
 
