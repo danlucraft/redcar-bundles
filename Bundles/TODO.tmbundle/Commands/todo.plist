@@ -9,7 +9,7 @@
 	<key>input</key>
 	<string>none</string>
 	<key>keyEquivalent</key>
-	<string>^T</string>
+	<string>@T</string>
 	<key>name</key>
 	<string>Show TODO List</string>
 	<key>output</key>
