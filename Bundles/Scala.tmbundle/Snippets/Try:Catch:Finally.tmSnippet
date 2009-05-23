@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>content</key>
+	<string>try 
+{
+	${2:// expression}
+} 
+catch  
+{
+	case e : ${1:Exception} =&gt; ${3:// expression}
+} 
+finally 
+{
+	${0:// expression}
+}</string>
+	<key>name</key>
+	<string>Try/Catch/Finally</string>
+	<key>scope</key>
+	<string>source.scala</string>
+	<key>tabTrigger</key>
+	<string>tfc</string>
+	<key>uuid</key>
+	<string>32C8D45A-CB0A-45B6-84B8-141F21155478</string>
+</dict>
+</plist>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>command</key>
+	<string>templatize.sh build-tplate.xml</string>
+	<key>extension</key>
+	<string>xml</string>
+	<key>name</key>
+	<string>Ant Build</string>
+	<key>uuid</key>
+	<string>78FFA678-C55D-4A55-BC3E-83BE55B4437D</string>
+</dict>
+</plist>
