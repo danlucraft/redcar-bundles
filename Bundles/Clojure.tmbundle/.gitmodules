@@ -1,0 +1,9 @@
+[submodule "Vendor/clj-doc"]
+	path = Vendor/clj-doc
+	url = git://github.com/ppierre/clj-doc.git
+[submodule "Vendor/clj-html-helpers"]
+	path = Vendor/clj-html-helpers
+	url = git://github.com/mmcgrana/clj-html-helpers.git
+[submodule "Vendor/clj-html"]
+	path = Vendor/clj-html
+	url = git://github.com/mmcgrana/clj-html.git

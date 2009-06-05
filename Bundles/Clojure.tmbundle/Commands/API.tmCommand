@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>beforeRunningCommand</key>
+	<string>nop</string>
+	<key>command</key>
+	<string>if [[ -e "$TM_BUNDLE_PATH/Vendor/clojure-documentation/index.html" ]]; then
+	echo "&lt;meta http-equiv='Refresh' content='0;URL=tm-file://$TM_BUNDLE_PATH/Vendor/clojure-documentation/index.html'&gt;"
+else
+	echo "&lt;meta http-equiv='Refresh' content='0;URL=http://clj-doc.s3.amazonaws.com/tmp/doc-1116/index.html'&gt;"
+fi
+</string>
+	<key>fallbackInput</key>
+	<string>word</string>
+	<key>input</key>
+	<string>none</string>
+	<key>keyEquivalent</key>
+	<string>^H</string>
+	<key>name</key>
+	<string>API</string>
+	<key>output</key>
+	<string>showAsHTML</string>
+	<key>scope</key>
+	<string>source.clojure</string>
+	<key>uuid</key>
+	<string>0CD94D29-C0F2-441B-8AAA-AF2D8F3E53B3</string>
+</dict>
+</plist>

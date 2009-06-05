@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>beforeRunningCommand</key>
+	<string>saveModifiedFiles</string>
+	<key>command</key>
+	<string>. "$TM_SUPPORT_PATH/lib/webpreview.sh"
+html_header "Clojure Bundle Help" "Clojure"
+
+if [[ -e "$TM_BUNDLE_PATH/Vendor/clojure-documentation/index.html" ]]; then
+	API_LINK="tm-file://$TM_BUNDLE_PATH/Vendor/clojure-documentation/index.html"
+else
+	API_LINK="http://clj-doc.s3.amazonaws.com/tmp/doc-1116/index.html"
+fi
+
+function el {
+	echo "&lt;a title=\"Will open in in the default browser\" href=\"javascript:TextMate.system('open $2', null)\"&gt;$1&lt;/a&gt;"
+}
+
+
+"$TM_SUPPORT_PATH/lib/markdown_to_help.rb" &lt;&lt;EOF
+&lt;h1&gt;!! DRAFT !!\&lt;h1&gt;
+
+# Clojure
+
+## Resources
+
+* **`el 'Clojure Website' 'http://clojure.org/'`**
+* **`el 'Clojure Google Groupe' 'http://groups.google.com/group/clojure'`**
+* **`el 'Clojure WikiBook' 'http://en.wikibooks.org/wiki/Clojure_Programming'`**
+* **[API reference]($API_LINK)** (&amp;#x2303;&amp;#x21E7;H)
+
+## Installation
+
+
+
+## Usage
+
+# Configuration Options
+
+These environment variables allow you to define or customize the behavior of certain commands. For help on setting them up please see [TextMate help](?environment_variables).
+
+EOF
+
+html_footer</string>
+	<key>input</key>
+	<string>none</string>
+	<key>keyEquivalent</key>
+	<string></string>
+	<key>name</key>
+	<string>Help</string>
+	<key>output</key>
+	<string>showAsHTML</string>
+	<key>scope</key>
+	<string>source.clojure</string>
+	<key>uuid</key>
+	<string>F3AF1D41-276D-43B3-A56D-626513CAEDB4</string>
+</dict>
+</plist>

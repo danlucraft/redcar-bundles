@@ -1,0 +1,18 @@
+#!/usr/bin/env ruby -wKU
+
+require ENV['TM_BUNDLE_SUPPORT'] + '/clojure.rb'
+require ENV['TM_SUPPORT_PATH'] + '/lib/exit_codes.rb'
+require ENV['TM_SUPPORT_PATH'] + '/lib/escape.rb'
+
+lambda = Clojure::Mate.macroexpand_1.chomp
+
+params, body = /^\(fn\* \[([^\]]+)\](.*)/.match(lambda).captures
+
+params.gsub!(/\bp(\d)__(?:\d+)\b/,'${\1:p\1}')
+
+body = e_snp(body)
+body.gsub!(/\bp(\d)__(?:\d+)\b/,'$\1')
+
+lambda = "(fn ["+params+"]"+body
+
+TextMate.exit_insert_snippet(lambda)

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>beforeRunningCommand</key>
+	<string>nop</string>
+	<key>command</key>
+	<string>#!/usr/bin/env ruby
+require ENV['TM_SUPPORT_PATH'] + '/lib/escape.rb'
+
+if ENV["TM_SELECTED_TEXT"]
+  print ";"
+  exit
+end
+
+col = ENV["TM_LINE_INDEX"].to_i
+str = STDIN.read
+start = str[0,col]
+ending = str[col,str.size]
+
+middle = case start
+  when /^.*\\$/ then ";"
+  when /^\s*$/ then ";; "
+  when /$.*\s$/ then "; "
+  else " ; "
+end
+
+print e_sn(start)+middle+"$0"+e_sn(ending)</string>
+	<key>fallbackInput</key>
+	<string>line</string>
+	<key>input</key>
+	<string>selection</string>
+	<key>keyEquivalent</key>
+	<string>;</string>
+	<key>name</key>
+	<string>comment</string>
+	<key>output</key>
+	<string>insertAsSnippet</string>
+	<key>scope</key>
+	<string>source.clojure - comment - string</string>
+	<key>uuid</key>
+	<string>49692CFD-5B04-4DC4-B209-B08FAC3B6123</string>
+</dict>
+</plist>

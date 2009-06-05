@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>commands</key>
+	<array>
+		<dict>
+			<key>command</key>
+			<string>moveRight:</string>
+		</dict>
+		<dict>
+			<key>command</key>
+			<string>selectBlock:</string>
+		</dict>
+		<dict>
+			<key>command</key>
+			<string>moveRight:</string>
+		</dict>
+	</array>
+	<key>keyEquivalent</key>
+	<string>~</string>
+	<key>name</key>
+	<string>Jump to Close Smart Pair</string>
+	<key>scope</key>
+	<string>source.clojure meta</string>
+	<key>scopeType</key>
+	<string>local</string>
+	<key>uuid</key>
+	<string>A3C6C0D6-3C92-4CE2-BEDE-384349BF0EB3</string>
+</dict>
+</plist>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>beforeRunningCommand</key>
+	<string>nop</string>
+	<key>command</key>
+	<string>#!/bin/bash
+NAME="${TM_SELECTED_TEXT:-$TM_CURRENT_WORD}"
+if [[ $NAME ]]; then
+cat &lt;&lt;SNIPPET
+
+(defmacro $NAME
+  "\${2:Docstring for $NAME.}"
+  [\${3:params*}]
+  \$0)
+SNIPPET
+else
+cat &lt;&lt;SNIPPET
+
+(defmacro \${1:name}
+  "\${2:Docstring for \$1.}"
+  [\${3:params*}]
+  \$0)
+SNIPPET
+fi
+</string>
+	<key>fallbackInput</key>
+	<string>word</string>
+	<key>input</key>
+	<string>selection</string>
+	<key>keyEquivalent</key>
+	<string>~</string>
+	<key>name</key>
+	<string>New Macro</string>
+	<key>output</key>
+	<string>insertAsSnippet</string>
+	<key>scope</key>
+	<string>source.clojure - meta</string>
+	<key>uuid</key>
+	<string>C8DA7A11-A28A-45FD-B9F6-D25940154E8E</string>
+</dict>
+</plist>

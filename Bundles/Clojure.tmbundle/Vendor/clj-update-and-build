@@ -1,0 +1,169 @@
+#!/usr/bin/env bash
+
+#==========================
+# bash - find path to script
+#==========================
+script_abspath=$(cd "${0%/*}" && echo "$PWD/${0##*/}")
+
+# to get the path only - not the script name - add
+script_path_only=`dirname "$script_abspath"`
+
+cd "$script_path_only"
+
+function svn_update {
+(
+	if [[ -d "$1/.svn" ]]; then
+		cat <<-MSG
+			
+			=====================================================
+			== Update $1 from googlecode svn
+			=====================================================
+			
+MSG
+		cd "$1"
+		svn \
+			--non-interactive \
+			up
+	else
+		cat <<-MSG
+			
+			=====================================================
+			== CheckOut $1 from googlecode svn
+			=====================================================
+			
+MSG
+		if [[ -d "$1" ]]; then
+			rm -rf "$1" || exit 1
+		fi
+		svn \
+			--non-interactive \
+			co http://$1.googlecode.com/svn/trunk $1 &&
+		cd "$1"
+	fi
+) || (
+cat <<-MSG
+	
+	!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	!! Failed update of $1 from googlecode svn
+	!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	
+MSG
+exit 1
+)
+}
+
+function build {
+(
+	name=$1 ; shift
+	cat <<-MSG
+		
+		=====================================================
+		== Build $name ${1:+ with option : $*}
+		=====================================================
+		
+MSG
+	cd "$name"
+	(ant $* clean jar) ||
+	( cat <<-MSG
+			
+			!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+			!! Failed build of $name ${1:+ with option : $*}
+			!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+			
+MSG
+		exit 1
+	)
+)
+}
+
+function update_submodule {
+(
+	cd "$script_path_only" &&
+	cd .. &&
+	git submodule update --init &&
+	cat <<-MSG
+		
+		=====================================================
+		== CheckOut clj-doc,clj-html,clj-html-helpers
+		== from github
+		=====================================================
+		
+MSG
+) || (
+cat <<-MSG
+	
+	!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	!! Failed update of clj-doc,clj-html,clj-html-helpers
+	!! from github
+	!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	
+MSG
+exit 1
+)
+}
+
+function update_doc {
+(
+	if [[ -d clojure-documentation ]]; then
+		rm -rf clojure-documentation || exit 1
+	fi
+	cd clj-doc &&
+	(ant -q -Dclojure_jar=../clojure.jar -Dclojure_contrib_jar=../clojure-contrib.jar)
+)
+#TODO : Fixe return code
+if [[ -e "$script_path_only/clojure-documentation/index.html" ]]; then
+cat <<-MSG
+	
+	=====================================================
+	== Build documentation for clojure and clojure-contrib
+	=====================================================
+	
+MSG
+else
+cat <<-MSG
+	
+	!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	!! Failed documentation generation
+	!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	
+MSG
+exit 1
+fi
+}
+
+function remove_sourceforge {
+(
+	if [[ -d "clojure/.svn" ]]; then
+		cd clojure
+		if (svn info | grep sourceforge ); then
+			cd ..
+			rm -rf clojure clojure-contrib svn_sourceforge_net
+cat <<-MSG
+	
+	!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	!! Remove sourceforge repository
+	!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	
+MSG
+		fi
+	fi
+)
+}
+
+
+(
+remove_sourceforge &&
+svn_update clojure &&
+svn_update clojure-contrib &&
+build clojure &&
+build clojure-contrib -Dclojure.jar=../clojure/clojure.jar &&
+mv -f clojure/clojure.jar . &&
+mv -f clojure-contrib/clojure-contrib.jar . &&
+cat <<-MSG
+
+	=====================================================
+	== Successfully updated Clojure and Clojure-contrib
+	=====================================================
+
+MSG
+) && update_submodule && update_doc
