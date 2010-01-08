@@ -8,6 +8,8 @@
 	</array>
 	<key>name</key>
 	<string>Redcar REPL</string>
+	<key>scopeName</key>
+	<string>repl.ruby</string>
 	<key>patterns</key>
 	<array>
 		<dict>
