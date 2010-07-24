@@ -751,7 +751,7 @@
 			<key>comment</key>
 			<string>string.regexp.replace.extended</string>
 			<key>end</key>
-			<string>\2((([egimos]*x[egimos]*)))\b</string>
+			<string>\1((([egimos]*x[egimos]*)))\b</string>
 			<key>endCaptures</key>
 			<dict>
 				<key>1</key>
