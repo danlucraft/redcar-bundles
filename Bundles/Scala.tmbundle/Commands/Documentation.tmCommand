@@ -3,12 +3,13 @@
 <plist version="1.0">
 <dict>
 	<key>beforeRunningCommand</key>
-	<string>nop</string>
+	<string>saveModifiedFiles</string>
 	<key>command</key>
-	<string>echo "&lt;meta http-equiv='Refresh' content='0;URL=http://www.scala-lang.org/docu/files/api/index.html'&gt;"
-
-
-</string>
+	<string>SCALADOC=${TM_SCALADOC:-"/System/Library/Frameworks/ScalaVM.framework/Versions/Current/Home/docs/api/index.html"}
+if [[ -f $SCALADOC ]]
+   then echo "&lt;meta http-equiv=\"refresh\" content=\"0; tm-file://$SCALADOC\"&gt;"
+   else echo "&lt;p&gt;Couldn't find Scala documentation.&lt;p&gt;You may need to set &lt;tt&gt;TM_SCALADOC&lt;/tt&gt; to the location of the root documentation file."
+fi</string>
 	<key>input</key>
 	<string>none</string>
 	<key>keyEquivalent</key>
@@ -20,6 +21,6 @@
 	<key>scope</key>
 	<string>source.scala</string>
 	<key>uuid</key>
-	<string>29FC5ED1-3AAA-4A7C-9F2D-D18D4E41A1E5</string>
+	<string>CE007C8C-9A0B-43B8-AEAF-45613BCD3DF7</string>
 </dict>
 </plist>

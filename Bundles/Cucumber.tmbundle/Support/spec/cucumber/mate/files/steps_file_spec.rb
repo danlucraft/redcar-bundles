@@ -45,32 +45,39 @@ module Cucumber
         
         describe "#alternate_files_and_names" do
           it "should generate a list of feature files (and names) which use this steps file" do
-            pending
             @steps_file.alternate_files_and_names.should ==
               [
-                {:name=>"foo feature", :file_path=>"#{@fixtures_path}/features/feature1/features/foo.feature"},
-                {:name=>"additional basic feature", :file_path=>"#{@fixtures_path}/features/additional_basic.feature"},
-                {:name=>"basic feature", :file_path=>"#{@fixtures_path}/features/basic.feature"},
-                {:name=>"non standard feature", :file_path=>"#{@fixtures_path}/features/non_standard.feature"}
+                {:file_path=>"#{@fixtures_path}/features/additional_basic.feature", :name => 'additional_basic'},
+                {:file_path=>"#{@fixtures_path}/features/basic.feature", :name => 'basic'},
+                {:file_path=>"#{@fixtures_path}/features/feature1/foo.feature", :name => 'foo'},
+                {:file_path=>"#{@fixtures_path}/features/non_standard.feature", :name => 'non_standard'}
               ]
           end
         end
         
         describe "#step_definitions" do
-          before(:each) do
-            Spec::Story::Step.stub!(:new).and_return(@step = mock('step'))
-          end
-          
           it "should return a list of step definitions included in this file" do
             @steps_file.step_definitions.should ==
               [
-                {:step => @step, :type => 'Given', :pattern => "Basic step (given)", :pattern_text => "Basic step (given)", :line => 5, :file_path => @steps_file.full_file_path, :group_tag => 'basic'},
-                {:step => @step, :type => 'Given', :pattern => "another basic step", :pattern_text => "another basic step", :line => 9, :file_path => @steps_file.full_file_path, :group_tag => 'basic'},
-                {:step => @step, :type => 'Given', :pattern => %r{Basic regexp (.*)}, :pattern_text => "Basic regexp (.*)", :line => 13, :file_path => @steps_file.full_file_path, :group_tag => 'basic'},
-                {:step => @step, :type => 'Given', :pattern => /classic regexp/, :pattern_text => "classic regexp", :line => 17, :file_path => @steps_file.full_file_path, :group_tag => 'basic'},
-                {:step => @step, :type => 'When', :pattern => "Basic when", :pattern_text => "Basic when", :line => 21, :file_path => @steps_file.full_file_path, :group_tag => 'basic'},
-                {:step => @step, :type => 'Then', :pattern => "Basic then", :pattern_text => "Basic then", :line => 25, :file_path => @steps_file.full_file_path, :group_tag => 'basic'},
+                {:pattern => "Basic step (given)", :pattern_text => "Basic step (given)", :line => 1, :file_path => @steps_file.full_file_path},
+                {:pattern => "another basic step", :pattern_text => "another basic step", :line => 5, :file_path => @steps_file.full_file_path},
+                {:pattern => %r{Basic regexp (.*) with multiple (.*) groups}, :pattern_text => "Basic regexp (.*) with multiple (.*) groups", :line => 9, :file_path => @steps_file.full_file_path},
+                {:pattern => /Some quoted regexp "(.*)" and '(.*)'/, :pattern_text => "Some quoted regexp \"(.*)\" and '(.*)'", :line => 13, :file_path => @steps_file.full_file_path},
+                {:pattern => /classic regexp/, :pattern_text => "classic regexp", :line => 17, :file_path => @steps_file.full_file_path},
+                {:pattern => "Basic when", :pattern_text => "Basic when", :line => 21, :file_path => @steps_file.full_file_path},
+                {:pattern => "Basic then", :pattern_text => "Basic then", :line => 25, :file_path => @steps_file.full_file_path},
               ]
+          end
+          
+          it "should parse unconventional step definitions" do
+            StepsFile.new(File.expand_path(File.join(@fixtures_path, %w[features step_definitions unconventional_steps.rb]))).step_definitions.should == [
+              {:pattern_text => "one liner with comment",           :pattern => "one liner with comment", :file_path => "#{@fixtures_path}/features/step_definitions/unconventional_steps.rb", :line => 1},
+              {:pattern_text => "one liner with trailing space",    :pattern => "one liner with trailing space", :file_path => "#{@fixtures_path}/features/step_definitions/unconventional_steps.rb", :line => 3},
+              {:pattern_text => "one liner with no trailing space", :pattern => "one liner with no trailing space", :file_path => "#{@fixtures_path}/features/step_definitions/unconventional_steps.rb", :line => 5},
+              {:pattern_text => "braces with a comment",            :pattern => "braces with a comment", :file_path => "#{@fixtures_path}/features/step_definitions/unconventional_steps.rb", :line => 7},
+              {:pattern_text => "braces with a trailing space",     :pattern => "braces with a trailing space", :file_path => "#{@fixtures_path}/features/step_definitions/unconventional_steps.rb", :line => 10},
+              {:pattern_text => "braces no trailing space",         :pattern => "braces no trailing space", :file_path => "#{@fixtures_path}/features/step_definitions/unconventional_steps.rb", :line => 13}
+            ]
           end
         end
       end

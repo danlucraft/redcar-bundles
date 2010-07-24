@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>beforeRunningCommand</key>
+	<string>nop</string>
+	<key>command</key>
+	<string>PRJNAME=$(basename `find $TM_PROJECT_DIRECTORY -iname *.ipk | cut -d "_" -f1`)
+palm-install -r "$PRJNAME"
+</string>
+	<key>input</key>
+	<string>none</string>
+	<key>keyEquivalent</key>
+	<string>^R</string>
+	<key>name</key>
+	<string>Remove installed Project</string>
+	<key>output</key>
+	<string>discard</string>
+	<key>uuid</key>
+	<string>F765B3A9-40F5-4908-B662-B3A927BEF41A</string>
+</dict>
+</plist>

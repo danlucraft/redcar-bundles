@@ -1,20 +1,20 @@
-# require and include should be ignored for completion
-require 'not_here'
-include NonExistent
-
 Given "Basic step (given)" do
   Foo.should_not_error
 end
 
-Given "another basic step" do
+Given "another basic step" do # a comment
   
 end
 
-Given %r{Basic regexp (.*)} do |given|
+Given %r{Basic regexp (.*) with multiple (.*) groups} do |first, second|
   
 end
 
-Given /classic regexp/ do
+Given %r{Some quoted regexp "(.*)" and '(.*)'} do |first, second| # a comment
+  
+end
+
+Given /classic regexp/ do # a comment
   
 end
 

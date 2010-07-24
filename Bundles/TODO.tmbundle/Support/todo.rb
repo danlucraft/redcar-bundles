@@ -13,6 +13,15 @@ end
 
 require "#{ENV['TM_SUPPORT_PATH']}/lib/web_preview"
 
+if ARGV.size > 0
+  if ARGV[0] == 'dir'
+    ENV['TM_SELECTED_FILES'] = ""
+    ENV['TM_PROJECT_DIRECTORY'] = File.dirname ENV['TM_FILEPATH']
+  elsif ARGV[0] == 'project'
+    ENV['TM_SELECTED_FILES'] = ""
+  end
+end
+
 if ENV['TM_PROJECT_DIRECTORY'] == '/'
   puts html_head(:window_title => "TODO", :page_title => "TODO List", :sub_title => "Error")
   puts <<-HTML
@@ -40,7 +49,7 @@ ignores = ENV['TM_TODO_IGNORE']
 
 def TextMate.file_link (file, line = 0)
   return "txmt://open/?url=file://" +
-    file.gsub(/[^a-zA-Z0-9.-\/]/) { |m| sprintf("%%%02X", m[0]) } +
+    file.gsub(/([^a-zA-Z0-9.-\/]+)/) { '%' + $1.unpack('H2' * $1.size).join('%').upcase } +
     "&amp;line=" + line.to_s
 end
 
@@ -57,6 +66,7 @@ puts ERB.new(File.read("#{ENV['TM_BUNDLE_SUPPORT']}/template_head.rhtml"), 0, '<
 
 STDOUT.flush
 
+project_dir = ENV['TM_PROJECT_DIRECTORY'] || ""
 home_dir = /^#{Regexp.escape ENV['HOME']}/
 total = 0
 TextMate.each_text_file do |file|
@@ -70,19 +80,27 @@ TextMate.each_text_file do |file|
           :file => file,
           :line => io.lineno,
           :content => content,
-          :type => tag[:label]
+          :type => tag[:label],
+          :rendered => '',
+          :index => tag[:matches].length
         }
+
+        part = $1 or next
+
         if tag[:label] == "RADAR" then
-          url = "rdar://" + $2
-          match[:match] = html_escape($1) + "<a href=\"" + url + "\">" + html_escape(url) + "</a>" + html_escape($3)
+          url, display = "http://openradar.appspot.com/" + $2, "rdar://" + $2
+          match[:match] = html_escape($1) + "<a href=\"" + url + "\" target=\"_blank\">" + html_escape(display) + "</a>" + html_escape($3)
         else
-          match[:match] = html_escape($1)
+          match[:match] = html_escape(part)
         end
+        match[:clean] = part.gsub(/\s+/, " ").gsub(/[^\w@`~!@#\$%\^&*\(\)-=+\[\]|\\\'\"\{\}<>,.\/\? ]/i, "")
+        
         tag[:matches] << match
         count = tag[:matches].length
         total += 1
         puts ERB.new(File.read("#{ENV['TM_BUNDLE_SUPPORT']}/template_update.rhtml"), 0, '<>').result(binding)
-        tag[:rendered] += ERB.new(File.read("#{ENV['TM_BUNDLE_SUPPORT']}/template_item.rhtml"), 0, '<>').result binding
+        match[:rendered] = ERB.new(File.read("#{ENV['TM_BUNDLE_SUPPORT']}/template_item.rhtml"), 0, '<>').result binding
+        tag[:rendered] += match[:rendered]
         STDOUT.flush
       end
     end if File.readable?(file)

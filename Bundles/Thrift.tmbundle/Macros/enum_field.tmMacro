@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>commands</key>
+	<array>
+		<dict>
+			<key>command</key>
+			<string>moveToEndOfParagraph:</string>
+		</dict>
+		<dict>
+			<key>argument</key>
+			<dict>
+				<key>beforeRunningCommand</key>
+				<string>nop</string>
+				<key>command</key>
+				<string>#!/usr/bin/env ruby
+
+if ENV['TM_CURRENT_LINE'] =~ /^\s*[\w.]+\s*=\s*(\d+)\s*[,;]?\s*$/
+	idx = $1.to_i + 1
+else
+	idx = 1
+end
+
+if ENV['TM_CURRENT_LINE'] =~ /^\s+/
+  indent = ''
+else
+  indent = "\t"
+end
+
+puts
+print "#{indent}${1:FIELD} = ${2:#{idx}},$0"
+</string>
+				<key>fallbackInput</key>
+				<string>line</string>
+				<key>input</key>
+				<string>none</string>
+				<key>keyEquivalent</key>
+				<string></string>
+				<key>name</key>
+				<string>enum field</string>
+				<key>output</key>
+				<string>insertAsSnippet</string>
+				<key>scope</key>
+				<string>meta.enum.thrift</string>
+				<key>uuid</key>
+				<string>841E598E-C872-4A98-A4D5-F13272F51B6F</string>
+			</dict>
+			<key>command</key>
+			<string>executeCommandWithOptions:</string>
+		</dict>
+	</array>
+	<key>keyEquivalent</key>
+	<string></string>
+	<key>name</key>
+	<string>enum field</string>
+	<key>scope</key>
+	<string>meta.enum.thrift</string>
+	<key>uuid</key>
+	<string>C334A09A-D090-4EC1-AD14-23FB9AF4D287</string>
+</dict>
+</plist>

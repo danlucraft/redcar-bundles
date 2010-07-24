@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>beforeRunningCommand</key>
+	<string>nop</string>
+	<key>command</key>
+	<string>ssh -p 5522 root@127.0.0.1 'luna-send -n 1 luna://com.palm.pmradiosimulator/autodrive/stop {}'</string>
+	<key>input</key>
+	<string>none</string>
+	<key>keyEquivalent</key>
+	<string>^@S</string>
+	<key>name</key>
+	<string>Stop GPS-simulation on Emulator</string>
+	<key>output</key>
+	<string>discard</string>
+	<key>uuid</key>
+	<string>2B0802C3-7340-4566-8845-5BA2B9DE3B09</string>
+</dict>
+</plist>

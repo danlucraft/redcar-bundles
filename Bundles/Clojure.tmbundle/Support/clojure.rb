@@ -13,8 +13,6 @@ module Clojure
   require 'clojure/core_ext'
   
   module Mate
-    TEXT_WRAP_LINE_LENGTH = 40
-        
     def run_current_form_or_line
       repl = get_repl
       
@@ -36,12 +34,8 @@ module Clojure
       
       to_run = pick_form(forms, offset) || ENV["TM_CURRENT_LINE"]
       result = repl.evaluate(to_run)
-            
-      (1..(result.length/TEXT_WRAP_LINE_LENGTH)).each do |counter|
-        result[(counter * TEXT_WRAP_LINE_LENGTH)..0] = "\n"
-      end
       
-      show_text(result)
+      show_html(result)
     end
   
     def run_file
@@ -59,36 +53,6 @@ module Clojure
       show_html get_repl.evaluate("(doc #{text})")
     end
     
-    def get_classpath
-      text = STDIN.read
-      
-      classpath = get_repl.evaluate("(System/getProperty \"java.class.path\")").
-                    chomp.
-                    gsub(/^"(.*)"$/,'\1').
-                    split(':').
-                    map { |p| File.expand_path(p) }.
-                    join("\n")
-      
-      %w{TM_BUNDLE_SUPPORT TM_BUNDLE_PATH TM_PROJECT_DIRECTORY}.each do |e|
-        classpath.gsub!(/^#{ENV[e]}/,"$#{e}")
-      end
-      
-      show_html("CLASSPATH:\n\n"+
-                classpath)
-    end
-    
-    def macroexpand_1
-      text = STDIN.read
-      
-      get_repl.evaluate("(macroexpand-1 '#{text})")
-    end
-    
-    def execute_clojure
-      text = STDIN.read
-      
-      get_repl.evaluate(text)
-    end
-    
     def connect_terminal
       get_repl.connect_terminal
       TextMate.exit_discard
@@ -96,14 +60,7 @@ module Clojure
   
     private
     def get_repl
-      if ENV["TM_PROJECT_DIRECTORY"] != nil
-        project_name = File.basename(ENV["TM_PROJECT_DIRECTORY"])
-      elsif ENV["TM_FILENAME"] != nil
-        project_name = File.basename(ENV["TM_FILENAME"])
-      else
-        project_name = "untitled-#{rand(10000)}"
-      end
-      
+      project_name = File.basename(ENV["TM_PROJECT_DIRECTORY"])
       Clojure.ensure_running(project_name)
     end
   
@@ -123,10 +80,6 @@ module Clojure
     
     def show_html(result)
       TextMate.exit_show_html("<pre>#{result.gsub("<", "&lt;")}</pre>")
-    end
-    
-    def show_text(result)
-      print result
     end
     
     extend self

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>beforeRunningCommand</key>
+	<string>nop</string>
+	<key>command</key>
+	<string>ssh -p 5522 root@127.0.0.1 'luna-send -n 1 luna://com.palm.pmradiosimulator/set_incomingsms {\"number\":\"4086177431\",\"message\":\"TextMate\"}'</string>
+	<key>input</key>
+	<string>none</string>
+	<key>keyEquivalent</key>
+	<string>^M</string>
+	<key>name</key>
+	<string>Simulate Test-SMS on Emulator</string>
+	<key>output</key>
+	<string>discard</string>
+	<key>uuid</key>
+	<string>74C26157-30DC-479F-9CB4-B055D86626E7</string>
+</dict>
+</plist>

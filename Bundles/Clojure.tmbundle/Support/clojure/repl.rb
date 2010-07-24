@@ -18,55 +18,12 @@ class Clojure::REPL
     ENV['CLOJURE_HOME'] = vendor_dir
     ENV['REPL_PORT_FILE'] = port_file
     
-    if not(File.exist?("#{vendor_dir}/clojure.jar"))
-      msg = <<-MSG
-        Didn't find clojure.jar file.
-
-        Would you downlad and install Clojure ?
-        MSG
-      btn_install_clojure = "Install Clojure"
-      btn_cancel = "Cancel"
-      res = TextMate::UI.alert(
-              :critical,"Error : missing clojure.jar",
-              msg,btn_install_clojure,btn_cancel)
-      if res == btn_install_clojure
-        update_textmate
-      else
-        exit(1)
-      end
-    end
-    
     cmd = File.expand_path(vendor_dir + "/clj")
     script = File.expand_path(File.dirname(__FILE__) + "/../repl.clj")
 
     system "screen -dm -S #{shell_name} #{e_sh cmd} -i #{e_sh script}"
     
     self
-  end
-  
-  def update_textmate
-    # TODO: Grab output or launch upadte command
-    `"$CLOJURE_HOME/clj-update-and-build"`
-    if $? != 0
-      puts <<-MSG
-<pre>
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-!! Installation failed.
-!! Try update command for more information
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-</pre>
-MSG
-      exit(1)
-    else
-      puts <<-MSG
-<pre>
-=====================================================
-== Clojure is installed, retry your command
-=====================================================
-</pre>
-MSG
-      exit(0)
-    end
   end
   
   def close

@@ -18,6 +18,8 @@ sys.path.remove(os.environ['TM_BUNDLE_SUPPORT'])
 # now import local sitecustomize
 try:
   import sitecustomize
+  if sys.version_info[0] >= 3:
+    from imp import reload
   reload(sitecustomize)
 except ImportError: pass
 
@@ -47,6 +49,7 @@ def tm_excepthook(e_type, e, tb):
         # if this is a SyntaxError, then tb == None
         filename, line_number, offset, text = e.filename, e.lineno, e.offset, e.text
         url, display_name = '', 'untitled'
+        if not offset: offset = 0
         io.write("<pre>%s\n%s</pre>\n" % (escape(e.text).rstrip(), "&nbsp;" * (offset-1) + "↑"))
         io.write("<blockquote><table border='0' cellspacing='0' cellpadding='0'>\n")
         if filename and path.exists(filename) and "TM_SCRIPT_IS_UNTITLED" not in environ:
@@ -67,10 +70,10 @@ def tm_excepthook(e_type, e, tb):
             # doesn't
             # message = ", ".join([str(arg) for arg in e.args])
             # message = ", ".join([unicode(arg) for arg in e.args])
-            message = "%s" % e.args[0]
+            message = repr(e.args[0])
             if len(e.args) > 1:
                 for arg in e.args[1:]:
-                    message += ", %s" % arg
+                    message += ", %s" % repr(arg)
         if isinstance(message, unicode):
             io.write("<p id='exception'><strong>%s:</strong> %s</p>\n" %
                                     (e_type.__name__, escape(message).encode("utf-8")))

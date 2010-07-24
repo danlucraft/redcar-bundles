@@ -3,14 +3,14 @@
 <plist version="1.0">
 <dict>
 	<key>content</key>
-	<string>protected </string>
+	<string>protected${1:[$2]} $0</string>
 	<key>name</key>
-	<string>Protected</string>
+	<string>protected</string>
 	<key>scope</key>
 	<string>source.scala</string>
 	<key>tabTrigger</key>
 	<string>pro</string>
 	<key>uuid</key>
-	<string>31F59048-C02C-4D8A-A162-283F48CF0F07</string>
+	<string>56C938B4-22B8-45F4-8E09-5BB4DE4633B0</string>
 </dict>
 </plist>

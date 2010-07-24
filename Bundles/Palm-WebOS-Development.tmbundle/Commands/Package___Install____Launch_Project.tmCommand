@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>beforeRunningCommand</key>
+	<string>saveModifiedFiles</string>
+	<key>command</key>
+	<string>export PALMPACK=$(palm-package -o "$TM_PROJECT_DIRECTORY" "$TM_PROJECT_DIRECTORY" | awk '{ print $4 }')
+palm-install $PALMPACK
+palm-launch $(basename $PALMPACK | cut -d "_" -f1)
+</string>
+	<key>input</key>
+	<string>none</string>
+	<key>keyEquivalent</key>
+	<string>@r</string>
+	<key>name</key>
+	<string>Package, Install &amp; Launch Project</string>
+	<key>output</key>
+	<string>showAsTooltip</string>
+	<key>uuid</key>
+	<string>90292671-C214-4654-B77A-4F42FC2E25C1</string>
+</dict>
+</plist>

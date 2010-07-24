@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
 	<key>fileTypes</key>
@@ -63,7 +63,7 @@
 		</dict>
 		<dict>
 			<key>begin</key>
-			<string>(&lt;!)(DOCTYPE)</string>
+			<string>(&lt;!)(DOCTYPE)\s+([:a-zA-Z_][:a-zA-Z0-9_.-]*)</string>
 			<key>captures</key>
 			<dict>
 				<key>1</key>
@@ -74,49 +74,23 @@
 				<key>2</key>
 				<dict>
 					<key>name</key>
-					<string>entity.name.tag.doctype.xml</string>
+					<string>keyword.doctype.xml</string>
+				</dict>
+				<key>3</key>
+				<dict>
+					<key>name</key>
+					<string>variable.documentroot.xml</string>
 				</dict>
 			</dict>
 			<key>end</key>
-			<string>(&gt;)</string>
+			<string>\s*(&gt;)</string>
 			<key>name</key>
 			<string>meta.tag.sgml.doctype.xml</string>
 			<key>patterns</key>
 			<array>
 				<dict>
-					<key>begin</key>
-					<string>(&lt;!)(ENTITY)\s([-_a-zA-Z0-9]+)</string>
-					<key>captures</key>
-					<dict>
-						<key>1</key>
-						<dict>
-							<key>name</key>
-							<string>punctuation.definition.tag.xml</string>
-						</dict>
-						<key>2</key>
-						<dict>
-							<key>name</key>
-							<string>entity.name.tag.entity.xml</string>
-						</dict>
-						<key>3</key>
-						<dict>
-							<key>name</key>
-							<string>meta.entity.xml</string>
-						</dict>
-					</dict>
-					<key>end</key>
-					<string>(&gt;)</string>
-					<key>patterns</key>
-					<array>
-						<dict>
-							<key>include</key>
-							<string>#doublequotedString</string>
-						</dict>
-						<dict>
-							<key>include</key>
-							<string>#singlequotedString</string>
-						</dict>
-					</array>
+					<key>include</key>
+					<string>#internalSubset</string>
 				</dict>
 			</array>
 		</dict>
@@ -261,29 +235,12 @@
 			</array>
 		</dict>
 		<dict>
-			<key>captures</key>
-			<dict>
-				<key>1</key>
-				<dict>
-					<key>name</key>
-					<string>punctuation.definition.constant.xml</string>
-				</dict>
-				<key>3</key>
-				<dict>
-					<key>name</key>
-					<string>punctuation.definition.constant.xml</string>
-				</dict>
-			</dict>
-			<key>match</key>
-			<string>(&amp;)([a-zA-Z0-9_-]+|#[0-9]+|#x[0-9a-fA-F]+)(;)</string>
-			<key>name</key>
-			<string>constant.character.entity.xml</string>
+			<key>include</key>
+			<string>#entity</string>
 		</dict>
 		<dict>
-			<key>match</key>
-			<string>&amp;</string>
-			<key>name</key>
-			<string>invalid.illegal.bad-ampersand.xml</string>
+			<key>include</key>
+			<string>#bare-ampersand</string>
 		</dict>
 		<dict>
 			<key>begin</key>
@@ -376,6 +333,59 @@
 	</array>
 	<key>repository</key>
 	<dict>
+		<key>EntityDecl</key>
+		<dict>
+			<key>begin</key>
+			<string>(&lt;!)(ENTITY)\s+(%\s+)?([:a-zA-Z_][:a-zA-Z0-9_.-]*)(\s+(?:SYSTEM|PUBLIC)\s+)?</string>
+			<key>captures</key>
+			<dict>
+				<key>1</key>
+				<dict>
+					<key>name</key>
+					<string>punctuation.definition.tag.xml</string>
+				</dict>
+				<key>2</key>
+				<dict>
+					<key>name</key>
+					<string>keyword.entity.xml</string>
+				</dict>
+				<key>3</key>
+				<dict>
+					<key>name</key>
+					<string>punctuation.definition.entity.xml</string>
+				</dict>
+				<key>4</key>
+				<dict>
+					<key>name</key>
+					<string>variable.entity.xml</string>
+				</dict>
+				<key>5</key>
+				<dict>
+					<key>name</key>
+					<string>keyword.entitytype.xml</string>
+				</dict>
+			</dict>
+			<key>end</key>
+			<string>(&gt;)</string>
+			<key>patterns</key>
+			<array>
+				<dict>
+					<key>include</key>
+					<string>#doublequotedString</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#singlequotedString</string>
+				</dict>
+			</array>
+		</dict>
+		<key>bare-ampersand</key>
+		<dict>
+			<key>match</key>
+			<string>&amp;</string>
+			<key>name</key>
+			<string>invalid.illegal.bad-ampersand.xml</string>
+		</dict>
 		<key>doublequotedString</key>
 		<dict>
 			<key>begin</key>
@@ -400,6 +410,85 @@
 			</dict>
 			<key>name</key>
 			<string>string.quoted.double.xml</string>
+			<key>patterns</key>
+			<array>
+				<dict>
+					<key>include</key>
+					<string>#entity</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#bare-ampersand</string>
+				</dict>
+			</array>
+		</dict>
+		<key>entity</key>
+		<dict>
+			<key>captures</key>
+			<dict>
+				<key>1</key>
+				<dict>
+					<key>name</key>
+					<string>punctuation.definition.constant.xml</string>
+				</dict>
+				<key>3</key>
+				<dict>
+					<key>name</key>
+					<string>punctuation.definition.constant.xml</string>
+				</dict>
+			</dict>
+			<key>match</key>
+			<string>(&amp;)([:a-zA-Z_][:a-zA-Z0-9_.-]*|#[0-9]+|#x[0-9a-fA-F]+)(;)</string>
+			<key>name</key>
+			<string>constant.character.entity.xml</string>
+		</dict>
+		<key>internalSubset</key>
+		<dict>
+			<key>begin</key>
+			<string>(\[)</string>
+			<key>captures</key>
+			<dict>
+				<key>1</key>
+				<dict>
+					<key>name</key>
+					<string>punctuation.definition.constant.xml</string>
+				</dict>
+			</dict>
+			<key>end</key>
+			<string>(\])</string>
+			<key>name</key>
+			<string>meta.internalsubset.xml</string>
+			<key>patterns</key>
+			<array>
+				<dict>
+					<key>include</key>
+					<string>#EntityDecl</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#parameterEntity</string>
+				</dict>
+			</array>
+		</dict>
+		<key>parameterEntity</key>
+		<dict>
+			<key>captures</key>
+			<dict>
+				<key>1</key>
+				<dict>
+					<key>name</key>
+					<string>punctuation.definition.constant.xml</string>
+				</dict>
+				<key>3</key>
+				<dict>
+					<key>name</key>
+					<string>punctuation.definition.constant.xml</string>
+				</dict>
+			</dict>
+			<key>match</key>
+			<string>(%)([:a-zA-Z_][:a-zA-Z0-9_.-]*)(;)</string>
+			<key>name</key>
+			<string>constant.character.parameter-entity.xml</string>
 		</dict>
 		<key>singlequotedString</key>
 		<dict>
@@ -425,6 +514,17 @@
 			</dict>
 			<key>name</key>
 			<string>string.quoted.single.xml</string>
+			<key>patterns</key>
+			<array>
+				<dict>
+					<key>include</key>
+					<string>#entity</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#bare-ampersand</string>
+				</dict>
+			</array>
 		</dict>
 		<key>tagStuff</key>
 		<dict>

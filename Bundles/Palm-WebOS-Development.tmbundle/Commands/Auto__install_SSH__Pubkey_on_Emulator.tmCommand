@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>beforeRunningCommand</key>
+	<string>nop</string>
+	<key>command</key>
+	<string>osascript -e 'tell application "Terminal" to do script with command "ssh -p 5522 root@127.0.0.1 \"mkdir /var/home/root/.ssh; chmod 700 /var/home/root/.ssh\"; scp -P 5522 ~/.ssh/id_rsa.pub root@127.0.0.1:/var/home/root/.ssh/authorized_keys"'</string>
+	<key>input</key>
+	<string>none</string>
+	<key>name</key>
+	<string>Auto-install SSH-Pubkey on Emulator</string>
+	<key>output</key>
+	<string>discard</string>
+	<key>uuid</key>
+	<string>FDD40F7F-23FC-4DEB-8959-2642570D65E9</string>
+</dict>
+</plist>

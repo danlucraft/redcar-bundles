@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>beforeRunningCommand</key>
+	<string>nop</string>
+	<key>command</key>
+	<string>ssh -p 5522 root@127.0.0.1 'luna-send -n 1 luna://com.palm.pmradiosimulator/set_incomingcall {\"number\":\"14086177431\"}'</string>
+	<key>input</key>
+	<string>none</string>
+	<key>keyEquivalent</key>
+	<string>^C</string>
+	<key>name</key>
+	<string>Simulate Test-Call on Emulator</string>
+	<key>output</key>
+	<string>discard</string>
+	<key>uuid</key>
+	<string>41FF90D1-F806-4139-AEDA-A6671F85B7DC</string>
+</dict>
+</plist>

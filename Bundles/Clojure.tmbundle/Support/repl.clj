@@ -6,13 +6,13 @@
 (use 'clojure.contrib.duck-streams)
  
 (defn on-thread [f]
-  (doto (new Thread f) (.start)))
+  (doto (new Thread f) (start)))
  
 (defn create-server 
   "creates and returns a server socket on port, will pass the client
   socket to accept-socket on connection" 
   [accept-socket port]
-    (let [ss (new ServerSocket port 0  (InetAddress/getByName "localhost"))]
+    (let [ss (new ServerSocket port 0  (.getByName InetAddress "localhost"))]
       (on-thread #(when-not (. ss (isClosed))
                     (try (accept-socket (. ss (accept)))
                          (catch SocketException e))
@@ -53,7 +53,7 @@
 
 (def server (create-server socket-repl 0))
 (def port (.getLocalPort server))
-(def port-file-path (System/getenv "REPL_PORT_FILE"))
+(def port-file-path (.getenv System "REPL_PORT_FILE"))
 (def port-file (File. port-file-path))
 (.. Runtime getRuntime (addShutdownHook (Thread. #(.delete port-file))))
 (spit port-file-path port)

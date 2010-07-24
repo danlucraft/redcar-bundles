@@ -20,37 +20,19 @@ module Clojure::Util
   def is_running(process)
     all = `ps -U "$USER" -o ucomm`
     all.to_a[1..-1].find { |cmd| process == cmd.strip }
-  end                     
-  
-  def get_clj()
-    if ENV['TM_CLJ'] != nil
-      return ENV['TM_CLJ']
-    elsif `which clj` != ""
-      return `which clj`
-    else
-      return File.expand_path(File.dirname(__FILE__) + '/../../Vendor/clj')
-    end
   end
 
-  def make_command(screen)
-    return "screen -dm -x #{e_sh screen} || screen -S #{e_sh screen} -- '#{get_clj}' -i"
-  end
-  
 
   def terminal_script(screen)
-    command = make_command(screen)
-    
     return <<-APPLESCRIPT
       tell application "Terminal"
         activate
-        do script "#{command}"
+        do script "screen -x #{e_sh screen}"
       end tell
   APPLESCRIPT
   end
 
   def iterm_script(screen)
-    command = make_command(screen)
-    
     return <<-APPLESCRIPT
       tell application "iTerm"
         activate
@@ -65,7 +47,7 @@ module Clojure::Util
           launch session "Default Session"
 
           tell the last session
-            write text "#{command}"
+            write text "screen -x #{e_sh screen}"
           end tell
         end tell
         

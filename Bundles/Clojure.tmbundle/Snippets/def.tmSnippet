@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>content</key>
-	<string>(def ${1:name} ${0:expr})</string>
+	<string>(def $1 $2)$0</string>
 	<key>name</key>
 	<string>def</string>
 	<key>scope</key>

@@ -42,7 +42,7 @@
 				<key>name</key>
 				<string>TM_COMMENT_START</string>
 				<key>value</key>
-				<string>; </string>
+				<string>;</string>
 			</dict>
 		</array>
 		<key>smartTypingPairs</key>

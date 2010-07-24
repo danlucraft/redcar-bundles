@@ -1,4 +1,5 @@
 #!/usr/bin/env ruby
+# encoding: utf-8
 
 # Copyright:
 #   (c) 2006 InquiryLabs, Inc.
@@ -12,7 +13,7 @@ require 'rails_bundle_tools'
 require "#{ENV["TM_SUPPORT_PATH"]}/lib/escape"
 require "#{ENV["TM_SUPPORT_PATH"]}/lib/web_preview"
 
-$RAKEMATE_VERSION = "$Revision: 9078 $"
+$RAKEMATE_VERSION = "$Revision$"
 
 Dir.chdir TextMate.project_directory
 

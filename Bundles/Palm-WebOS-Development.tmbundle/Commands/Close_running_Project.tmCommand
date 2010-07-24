@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>beforeRunningCommand</key>
+	<string>nop</string>
+	<key>command</key>
+	<string>PRJNAME=$(basename `find $TM_PROJECT_DIRECTORY -iname *.ipk | cut -d "_" -f1`)
+palm-launch -c "$PRJNAME"
+</string>
+	<key>input</key>
+	<string>none</string>
+	<key>keyEquivalent</key>
+	<string>^Q</string>
+	<key>name</key>
+	<string>Close running Project</string>
+	<key>output</key>
+	<string>discard</string>
+	<key>uuid</key>
+	<string>AE49697C-2AB7-4235-BC96-9E1706E4C690</string>
+</dict>
+</plist>

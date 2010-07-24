@@ -1,4 +1,5 @@
-#!/usr/bin/env ruby
+#!/usr/bin/env ruby -w
+# encoding: utf-8
 
 # if we are not called directly from TM (e.g. JavaScript) the caller
 # should ensure that RUBYLIB is set properly
@@ -12,10 +13,7 @@ require "web_preview"
 require "erb"
 include ERB::Util
 
-tm_var_or_qri = 'RI=$(type -P ${TM_RUBY_RI:-qri})'
-ri_default    = '[[ ! -x "$RI" ]] && RI=$(type -P ri)'
-
-RI_EXE        = `#{tm_var_or_qri}; #{ri_default}; /bin/echo -n "$RI"`
+RI_EXE = [ ENV['TM_RUBY_RI'], 'qri', 'ri' ].find { |cmd| !cmd.to_s.empty? && (File.executable?(cmd) || ENV['PATH'].split(':').any? { |dir| File.executable? File.join(dir, cmd) }) ? cmd : false }
 
 term = ARGV.shift
 
@@ -58,6 +56,13 @@ mode = ARGV.shift
 if mode.nil? then
 
   term = STDIN.read.strip
+
+  if term.empty?
+    term = TextMate::UI.request_string( :title => "Ruby Documentation Search",
+                                        :prompt => "Enter a term to search for:",
+                                        :button1 => "search")
+  end
+  
   TextMate.exit_show_tool_tip("Please select a term to look up.") if term.empty?
 
   term, documentation = ri(term)
@@ -95,13 +100,14 @@ HTML
   html_footer
   TextMate.exit_show_html
 elsif mode == 'js' then
-  documentation = h(`#{RI_EXE} -T -f plain #{e_sh term}`) \
+  documentation = h(`#{e_sh RI_EXE} -T -f plain #{e_sh term}`) \
     rescue "<h1>ri Command Error.</h1>"
 
   documentation.gsub!(/(\s|^)\+(\w+)\+(\s|$)/, "\\1<code>\\2</code>\\3")
 
-  if documentation =~ /\A(?:More than one method matched|-+\s+Multiple choices)/
-    methods       = documentation.split(/\n[ \t]*\n/).last.strip.split(/,\s*/)
+  if documentation =~ /\A(?:\s*More than one method matched|-+\s+Multiple choices)/
+    methods       = documentation.split(/\n[ \t]*\n/).last.
+                    strip.split(/(?:,\s*|\n)/).map { |m| m[/\S+/] }.compact
     documentation = ">> #{methods.join(' ')}"
   elsif documentation =~ /\A(?:-+\s+)((?:[A-Z_]\w*::)*[A-Z_]\w*)(#|::|\.)/
     nesting   = $1

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>beforeRunningCommand</key>
+	<string>nop</string>
+	<key>command</key>
+	<string>PRJNAME=$(basename `find $TM_PROJECT_DIRECTORY -iname *.ipk | cut -d "_" -f1`)
+palm-launch -p "{mojoConfig:true, debuggingEnabled:true}" "$PRJNAME"
+</string>
+	<key>input</key>
+	<string>none</string>
+	<key>keyEquivalent</key>
+	<string>@d</string>
+	<key>name</key>
+	<string>Launch Project in Debugging-Mode</string>
+	<key>output</key>
+	<string>discard</string>
+	<key>uuid</key>
+	<string>17F12A86-5C9D-4463-A8AB-A1BB57356C08</string>
+</dict>
+</plist>

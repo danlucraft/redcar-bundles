@@ -22,7 +22,31 @@ module Cucumber
         
         it "should determine the name of the file" do
           @file.name.should == 'basic'
-        end        
+        end
+        
+        describe "#create_from_file_path" do
+          describe "when file name is not valid step nor feature file name" do
+            it "should throw a descriptive exception" do
+              lambda { Base.create_from_file_path("/path/to/some_feature.features") }.should raise_error(InvalidFilePathError)
+            end
+          end
+          describe "when file name is .feature" do
+            before(:each) do
+              @file = Base.create_from_file_path("/path/to/some_feature.feature")
+            end
+            it do
+              @file.class.should == FeatureFile
+            end
+          end
+          describe "when file name is _steps.rb" do
+            before(:each) do
+              @file = Base.create_from_file_path("/path/to/some_steps.rb")
+            end
+            it do
+              @file.class.should == StepsFile
+            end
+          end
+        end
         
         describe "#default_file_path" do
           describe "when the file type is invalid" do
@@ -83,6 +107,28 @@ module Cucumber
               end
             end
           end
+          
+          describe "when looking for all existing files" do
+            it "should find all feature files" do
+              expected = %w[additional_basic.feature basic.feature feature1/foo.feature non_standard.feature]
+              expected.map! { |path| FeatureFile.new(File.join(project_root, "features", path)) }
+              @file.all(:feature).should == expected
+            end
+
+            it "should find all steps files" do
+              expected = %w[feature1/step_definitions/foo_steps.rb
+                non_standard_dir/step_definitions/non_standard_steps.rb
+                step_definitions/additional_basic_steps.rb
+                step_definitions/basic_steps.rb
+                step_definitions/global_steps.rb
+                step_definitions/unconventional_steps.rb
+                ]
+              expected.map! { |path| StepsFile.new(File.join(project_root, "features", path)) }
+              @file.all(:steps).should == expected
+            end
+          end
+
+          
           
         end # file_path
         

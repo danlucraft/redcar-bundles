@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>beforeRunningCommand</key>
+	<string>nop</string>
+	<key>command</key>
+	<string>res=$(CocoaDialog inputbox --title "Project Name" --informative-text "Please enter the Project name:" --button1 "Create" --button2 "Cancel")
+
+PRJNAME=$(echo "$res" | tail -n 1)
+
+if [[ $PRJNAME == 1 || $PRJNAME == 2 ]]; then
+	exit_discard
+fi
+
+res2=$(CocoaDialog filesave --title "Project Location" --text "Choose the destination for the project" --with-file "$PRJNAME")
+
+if [ ! -n "$res2" ]; then 
+	exit_discard
+fi
+
+export GENSTRING="{ title:'$PRJNAME',id:'com.$TM_ORGANIZATION_NAME.$PRJNAME',version:'1.0.0' }"
+palm-generate -p "$GENSTRING" "$res2"
+
+mate $res2</string>
+	<key>input</key>
+	<string>none</string>
+	<key>keyEquivalent</key>
+	<string>^S</string>
+	<key>name</key>
+	<string>Generate New Project</string>
+	<key>output</key>
+	<string>discard</string>
+	<key>uuid</key>
+	<string>676BC425-2980-496D-A5C6-D21A45F7D92B</string>
+</dict>
+</plist>
