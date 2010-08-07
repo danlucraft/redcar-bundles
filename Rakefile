@@ -10,10 +10,11 @@ task :clean_textmate do
       # p [fn,new_fn]
       next if new_fn == fn
       if File.exist?(new_fn)
-        puts "already exists #{new_fn}"
-        new_fn = File.join(File.dirname(fn), "next_" + new_basename)
-        unless File.exist?(new_fn)
-          FileUtils.mv(fn, new_fn)
+        new_fn = File.join(File.dirname(fn), "next_" + new_basename)  
+        if File.read(new_fn) == File.read(fn)
+          FileUtils.rm_rf(fn)
+        else
+          puts "can't move or remove: #{fn}"
         end
       else
         begin
