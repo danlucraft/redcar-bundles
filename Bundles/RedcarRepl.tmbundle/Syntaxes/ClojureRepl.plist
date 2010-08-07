@@ -7,14 +7,14 @@
 		<string>(internal)</string>
 	</array>
 	<key>name</key>
-	<string>Redcar REPL</string>
+	<string>Clojure REPL</string>
 	<key>scopeName</key>
-	<string>repl.ruby</string>
+	<string>repl.clojure</string>
 	<key>patterns</key>
 	<array>
 		<dict>
 			<key>begin</key>
-			<string>^>></string>
+			<string>^user=></string>
 			<key>beginCaptures</key>
 			<dict>
 				<key>1</key>
@@ -26,12 +26,12 @@
 			<key>end</key>
 			<string>^(?=&gt;|x&gt;)</string>
 			<key>name</key>
-			<string>repl.entry source.ruby</string>
+			<string>repl.entry source.clojure</string>
 			<key>patterns</key>
 			<array>
 				<dict>
 					<key>include</key>
-					<string>source.ruby</string>
+					<string>source.clojure</string>
 				</dict>
 			</array>
 		</dict>
