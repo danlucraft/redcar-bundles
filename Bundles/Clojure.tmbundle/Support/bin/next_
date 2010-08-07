@@ -1,5 +1,0 @@
-#!/usr/bin/env ruby -wKU
-
-require ENV['TM_BUNDLE_SUPPORT'] + '/clojure.rb'
-
-print Clojure::Mate.execute_clojure
