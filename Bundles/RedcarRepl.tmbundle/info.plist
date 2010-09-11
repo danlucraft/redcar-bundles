@@ -5,7 +5,7 @@
 	<key>contactName</key>
 	<string>Daniel Lucraft</string>
 	<key>description</key>
-	<string>Syntax highlighting for the Ruby REPL.</string>
+	<string>Syntax highlighting for the Redcar REPLs.</string>
 	<key>uuid</key>
 	<string>900934B5-CE02-48CD-AEDD-105675DE37DB</string>
 </dict>
