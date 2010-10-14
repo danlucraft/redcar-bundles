@@ -14,7 +14,7 @@
 	<array>
 		<dict>
 			<key>begin</key>
-            <string>^groovy:&gt;</string>
+            <string>^groovy></string>
 			<key>beginCaptures</key>
 			<dict>
 				<key>1</key>
@@ -24,7 +24,7 @@
 				</dict>
 			</dict>
 			<key>end</key>
-			<string>^===></string>
+			<string>^(===&gt;|x&gt;)</string>
 			<key>name</key>
 			<string>repl.entry source.groovy</string>
 			<key>patterns</key>
