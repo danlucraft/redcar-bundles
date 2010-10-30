@@ -1,9 +1,0 @@
-# PHP Cake Bundle Comments
-
-## Infininight (msheets) - 2008-05-20
-
-* "function onError" snippet missing tab inside brackets (and a tab stop?).
-* Scope of the three commands is too broad. Should just be text.html.php.cake.
-* Shortcut of Cookbook and Browse Source commands is non-standard. Secondary help is typically ⌃⇧H
-
----
