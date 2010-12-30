@@ -49,6 +49,7 @@
 		<string>rb</string>
 		<string>rbx</string>
 		<string>rjs</string>
+		<string>ru</string>
 		<string>Rakefile</string>
 		<string>rake</string>
 		<string>cgi</string>
@@ -57,6 +58,7 @@
 		<string>Gemfile</string>
 		<string>irbrc</string>
 		<string>capfile</string>
+		<string>Capfile</string>
 	</array>
 	<key>firstLineMatch</key>
 	<string>^#!/.*\bruby</string>
