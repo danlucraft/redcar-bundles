@@ -6,6 +6,7 @@
 	<array>
 		<string>yaml</string>
 		<string>yml</string>
+		<string>Gemfile.lock</string>
 	</array>
 	<key>foldingStartMarker</key>
 	<string>^[^#]\s*.*:(\s*\[?| &amp;.+)?$</string>
