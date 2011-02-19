@@ -5,7 +5,7 @@
 	<key>beforeRunningCommand</key>
 	<string>saveModifiedFiles</string>
 	<key>command</key>
-	<string>export PALMPACK=$(palm-package -o "$TM_PROJECT_DIRECTORY" "$TM_PROJECT_DIRECTORY" | awk '{ print $4 }')
+	<string>export PALMPACK=$(palm-package -o "$TM_PROJECT_DIRECTORY" "$TM_PROJECT_DIRECTORY" | awk '{ print $3 }')
 palm-install $PALMPACK
 palm-launch $(basename $PALMPACK | cut -d "_" -f1)
 </string>
