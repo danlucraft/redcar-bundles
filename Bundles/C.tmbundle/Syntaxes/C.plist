@@ -4,8 +4,8 @@
 <dict>
 	<key>fileTypes</key>
 	<array>
-		<string>c</string>
-		<string>h</string>
+		<string>.c</string>
+		<string>.h</string>
 	</array>
 	<key>firstLineMatch</key>
 	<string>-[*]-( Mode:)? C -[*]-</string>
