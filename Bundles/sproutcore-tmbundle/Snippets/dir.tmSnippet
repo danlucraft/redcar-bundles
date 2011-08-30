@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>content</key>
+	<string>SC.Logger.dir(${1:Object});</string>
+	<key>name</key>
+	<string>dir</string>
+	<key>tabTrigger</key>
+	<string>dir</string>
+	<key>uuid</key>
+	<string>BB09A235-A878-4817-B585-4D8DA4787181</string>
+</dict>
+</plist>

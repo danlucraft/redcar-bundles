@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>content</key>
+	<string>SC.WebView.design({
+  layout: {${2:top:${3:0}}${4:,right:${5:0}}${6:,bottom:${7:0}}${8:,left:${9:0}}${10:,height:${11:0}}${12:,width:${13:0}}},
+  value: '${14:www.google.com}'
+}),</string>
+	<key>name</key>
+	<string>web</string>
+	<key>tabTrigger</key>
+	<string>web</string>
+	<key>uuid</key>
+	<string>83C07CEC-4E6A-42F6-AFE4-E5491BFCC162</string>
+</dict>
+</plist>
